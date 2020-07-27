@@ -1,0 +1,29 @@
+##UPKEEP
+alias savrc="cp ~/.conf/.aliases ~/myshare/conf; cp ~/.conf/.suse_aliases ~/myshare/conf; cp ~/.conf/.vimrc ~/myshare/conf; cp ~/.conf/setup.sh ~/myshare/conf; cp ~/.conf/bookmarks.html ~/myshare/conf"
+alias vimsrc="vim /home/oakeada/.conf/.suse_aliases"
+
+##SCRIPTS & BINARIES
+alias vscode="/home/oakeada/bin/VSCode-linux-x64/bin/code"
+
+##CLEARCASE CMDS
+function msv {
+    csv ${1%.*}
+}
+
+function mrv {
+    rmv ${1%.*}
+}
+
+function ls_tag {
+	ct pwv | awk '{print $NF}' | tail -1
+}
+
+function mco {
+	ct co -nc $1
+}
+
+alias cdv="cd /home/oakeada/views; l"
+alias cdvobs="cd /view/$(ls_tag)/vobs"
+alias edcs="ct edcs"
+alias catcs="ct catcs"
+alias setcs="ct setcs"
