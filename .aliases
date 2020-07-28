@@ -147,6 +147,9 @@ function greph {
      #set number
  ##to add syntax-highlighting to a specific file type, add this line to ~/.vimrc
      #autocmd BufNewFile,BufRead .aliases set syntax=sh
+ ##change date
+     #e.g. to 3:14am on dec 7 1992
+	#date 1207031492
  ##string manipulation
     #remove everything after & including last matching substring
 	#${string%substring*}
