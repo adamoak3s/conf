@@ -56,6 +56,20 @@ function fname {
     echo ${1##*/}
 }
 
+function hide {
+    for var in $@
+        do
+	    mv $var $var.hidden
+	done
+}
+
+function unhide {
+    for var in $@
+        do
+	    mv $var ${var%.*}
+	done
+}
+
 function echo_os {
 	foo=$(lsb_release -i)
 	echo ${foo#*:}
@@ -103,11 +117,6 @@ function tarpwd {
 
 function utar {
    tar -xvzf $1
-}
-
-function pizza {
-    curl -X POST https://maker.ifttt.com/trigger/2_$1/with/key/ceyFl30ngD4ES9fFogAKfl
-    echo -e
 }
 
 function greph {
