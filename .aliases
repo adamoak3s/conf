@@ -3,9 +3,10 @@ HISTFILESIZE=20000
 
 source /home/$USER/.conf/.suse_aliases
 
-##UPKEEP
+##META
 alias vimrc="vim /home/$USER/.conf/.aliases"
 alias uprc="source /home/$USER/.bashrc"
+alias catrc="cat /home/$USER/.conf/.aliases"
 
 ##SHORTENERS
 alias ls="ls+"
@@ -111,6 +112,7 @@ function qfind {
         find . -iname $1
 }
 
+ #tar the contents of the pwd
 function tarpwd { 
     tar -czvf $(fname $(pwd)).tar.gz $(pwd)
 }
@@ -124,6 +126,13 @@ function greph {
 }
 
 ###USER NOTES - USEFUL COMMANDS
+ ##commands in succession
+   #run b iff a is sucessful
+       #$a && b
+   #run b even if a fails
+       #$a;b
+   #run b if a never even finishes
+       #$a & b
  ##Add user to a group
    #gpasswd -a <username> <groupname>
  ##Get OS version
@@ -151,14 +160,14 @@ function greph {
 		# $mkdir two
 		# $mkdir three
  ##grep for multiple strings at once
-    # $grep -E 'file1|file2|file3'
+    #$grep -E 'file1|file2|file3'
  ##to add line numbers to vim, add this line to ~/.vimrc
-     #set number
+     # :set number
  ##to add syntax-highlighting to a specific file type, add this line to ~/.vimrc
      #autocmd BufNewFile,BufRead .aliases set syntax=sh
  ##change date
      #e.g. to 3:14am on dec 7 1992
-	#date 1207031492
+	#$date 1207031492
  ##string manipulation
     #remove everything after & including last matching substring
 	#${string%substring*}
