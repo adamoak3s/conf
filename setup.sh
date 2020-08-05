@@ -5,4 +5,4 @@ cp .vimrc ~/.conf
 cp bookmarks ~/.conf
 
 echo "source ~/.conf/.aliases" >> ~/.bashrc
-sudo echo "source ~/.conf/.vimrc" >> ~/etc/vimrc
+sudo echo "source ~/.conf/.vimrc" >> /etc/vimrc
