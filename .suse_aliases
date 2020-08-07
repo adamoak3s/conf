@@ -27,3 +27,7 @@ alias cdvobs="cd /view/$(ls_tag)/vobs"
 alias edcs="ct edcs"
 alias catcs="ct catcs"
 alias setcs="ct setcs"
+
+alias jam_pizza="echo 'boot -noclose -elf -bsu flash0.bsu && ifconfig eth2 -auto && android fastboot -device=flash0 -transport=tcp' && echo '$(tput setab 1)run ^THIS^ cmd in BOLT & then run vTHISv cmd here$(tput sgr 0)' && echo '/home/oakeada/c_files/androidtv/scripts/update_joey4.sh 192.168.1.105'"
+
+alias aroot="cd ~/ATV/android-q-10"
