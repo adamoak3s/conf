@@ -13,6 +13,7 @@ alias ls="ls+"
 alias ll="ls -al"
 alias l="ls -l"
 alias lh="ls -a"
+alias lll="readlink -f"
 
 alias c="clear"
 alias x="exit"
@@ -20,6 +21,8 @@ alias x="exit"
 alias gateway="ip route | grep default"
 alias sshupdate="echo \"\" > /home/$USER/.ssh/known_hosts"
 alias addtopath="PATH=$PATH:$(pwd)"
+alias qfind="find . -iname"
+alias utar="tar -xzvf"
 
 ##ERRONEOUS INPUT HANDLERS
  #case
@@ -36,10 +39,14 @@ alias CP="cp"
 alias CD="cd"
 
  #spelling
+alias k="l"
 alias fdsik="fdisk"
-alias vmi="vim"
 alias ipa="ip a"
 alias suod="sudo"
+
+alias vmi="vim"
+alias cim="vim"
+alias bim="vim"
 
 alias souce="source"
 alias sourc="source"
@@ -53,6 +60,14 @@ alias moun="mount"
 
 ##FUNCTIONS
  #gets filename from full path
+function qgrep {
+	grep -Irn $1 2>/dev/null
+}
+
+function qfindd {
+	find . -iname $1 2>/dev/null
+}
+
 function fname {
     echo ${1##*/}
 }
@@ -108,21 +123,25 @@ function sh256chk {
         echo "$1 *$2" | shasum -a 256 --check
 }
 
-function qfind {
-        find . -iname $1
-}
-
  #tar the contents of the pwd
 function tarpwd { 
     tar -czvf $(fname $(pwd)).tar.gz $(pwd)
 }
 
-function utar {
-   tar -xvzf $1
+function greph {
+    history | grep $1 | tail
 }
 
-function greph {
-    history | grep $1
+function showme {
+    let req=$2
+    if [ "$#" -ne 3 ]; then
+        len=20
+    else
+        len=$3
+    fi
+    let end=$req+$len
+    let tot=$len+10
+    cat -n $1 | head -$end | tail -$tot
 }
 
 ###USER NOTES - USEFUL COMMANDS
