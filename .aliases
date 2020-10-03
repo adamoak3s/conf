@@ -1,7 +1,7 @@
 HISTSIZE=20000
 HISTFILESIZE=20000
 
-source /home/$USER/.conf/.suse_aliases
+source ./.local_aliases
 
 ##META
 alias vimrc="vim /home/$USER/.conf/.aliases"
