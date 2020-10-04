@@ -61,7 +61,15 @@ alias moun="mount"
 ##FUNCTIONS
  #gets filename from full path
 function qgrep {
-	grep -Irn $1 2>/dev/null
+	grep -rEIn $1 2>/dev/null
+}
+
+function ccc {
+    for i in {1..40}
+    do
+	echo -e
+    done
+    clear
 }
 
 function qfindd {

@@ -1,0 +1,143 @@
+##UPKEEP
+alias savrc="cp ~/.conf/.aliases ~/myshare/conf; cp ~/.conf/.suse_aliases ~/myshare/conf; cp ~/.conf/.vimrc ~/myshare/conf; cp ~/.conf/setup.sh ~/myshare/conf; cp ~/.conf/bookmarks.html ~/myshare/conf"
+alias vimsrc="vim /home/oakeada/.conf/.suse_aliases"
+
+##SCRIPTS & BINARIES
+alias vscode="/home/oakeada/bin/VSCode-linux-x64/bin/code"
+alias adb="/home/oakeada/ATV/android-q-10/out/soong/host/linux-x86/bin/adb"
+
+##CLEARCASE CMDS
+alias cdv="cd /home/oakeada/views; l"
+alias cdvobs="cd /view/$(ls_tag)/vobs"
+alias edcs="ct edcs"
+alias catcs="ct catcs"
+alias setcs="ct setcs"
+alias lsco="ct lsco -r -me -cview"
+alias lscos="ct lsco -r -me -cview -short"
+
+#jamming references
+alias jamr_pizza_util="echo 'boot -noclose -elf -bsu flash0.bsu && ifconfig eth2 -auto && android fastboot -device=flash0 -transport=tcp' && echo '$(tput setab 1)run ^THIS^ cmd in BOLT & then run vTHISv cmd here$(tput sgr 0)' && echo '/home/oakeada/c_files/androidtv/scripts/update_joey4.sh 192.168.1.105 && eth2_off'"
+alias jamr_hopper="echo '$(tput setab 3) mount -t nfs -o soft,nolock 192.168.1.1:/home/oakeada/mnt/ /mnt/mine$(tput sgr 0)'"
+alias jamr_snap="echo 'boot -noclose -elf -bsu flash0.bsu && ifconfig eth1 -auto && android fastboot -device=flash0 -transport=tcp' && echo '$(tput setab 1)run ^THIS^ cmd in BOLT & then run vTHISv cmd here$(tput sgr 0)' && echo '/home/oakeada/c_files/androidtv/scripts/update_joey4.sh 192.168.1.106'"
+
+#frequent dirs
+alias aroot="cd ~/ATV/android-q-10"
+alias stories="cd ~/stories; l"
+alias tip="cd ~/tip;ls -l"
+
+#smart switches
+alias pizza_off="curl -X POST https://maker.ifttt.com/trigger/g1_off/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
+alias pizza_on="curl -X POST https://maker.ifttt.com/trigger/g1_on/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
+alias reboot_pizza="pizza_off && sleep 20 && pizza_on"
+
+alias eth2_on="curl -X POST https://maker.ifttt.com/trigger/g4_on/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
+alias eth2_off="curl -X POST https://maker.ifttt.com/trigger/g4_off/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
+
+alias snap_on="curl -X POST https://maker.ifttt.com/trigger/w2_on/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
+alias snap_off="curl -X POST https://maker.ifttt.com/trigger/w2_off/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
+alias reboot_snap="snap_off && sleep 15 && snap_on"
+
+alias suse_on="curl -X POST https://maker.ifttt.com/trigger/g2_on/with/key/ceyFl30ngD4ES9fFogAKfl"
+alias suse_off="curl -X POST https://maker.ifttt.com/trigger/g2_off/with/key/ceyFl30ngD4ES9fFogAKfl"
+alias reboot_suse="suse_off && sleep 20 && suse_on"
+
+##FUNCTIONS
+
+#Clearcase functions
+function fmerge {
+	if [ "$#" -ne 1 ]; then
+		echo 'Please provide merge-from-branch'
+	else	
+		ct findmerge . -fver $1 -qal -gmerge
+	fi
+}
+
+function cia {
+	 ct ci -c "$1" $(lscos)
+}
+
+
+function msv {
+	csv ${1%.*}
+}
+
+function mrv {
+	rmv ${1%.*}
+}
+
+function ls_tag {
+	ct pwv | awk '{print $NF}' | tail -1
+}
+
+function co {
+	ct co -nc $1
+}
+
+function goto {
+	cd /view/$(ls_tag)/vobs/modules/$1 2>/dev/null|| cd /view/$(ls_tag)/vobs/$1
+}
+
+#misc
+function csd {
+	cd GOT-$1
+}
+
+function mksdir {
+	mkdir GOT-$1
+}
+
+function jamr_pizza {
+	eth2_on && jamr_pizza_util
+}
+
+
+function ktip {
+	for var in $@
+		do
+			cp $var $var.tip
+				done
+}
+
+function kmine {
+	for var in $@
+		do
+			cp $var $var.mine
+				done
+}
+
+#STB jammers
+function update_joey {
+	if [ "$#" -ne 1 ]; then
+		dir=/home/oakeada/ATV/android-q-10/out/target/product/inuvik
+	else
+		dir=$PWD
+	fi
+		echo flashing from images in $dir
+		FASTBOOT_DIR=~/ATV/android-q-10/out/host/linux-x86/bin
+
+		IP_ADDR=192.168.1.105
+		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR set_active a
+		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR erase misc
+		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash vbmeta $dir/vbmeta.img
+		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash super $dir/super.img
+		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash dtbo $dir/dtbo.inuvik.img
+		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR reboot
+}
+
+function update_snap {
+	if [ "$#" -ne 1 ]; then
+		dir=/home/oakeada/ATV/android-q-10/out/target/product/inuvik
+	else
+		dir=$PWD
+	fi
+		echo flashing from images in $dir
+		FASTBOOT_DIR=~/ATV/android-q-10/out/host/linux-x86/bin
+
+		IP_ADDR=192.168.1.106
+		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR set_active a
+		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR erase misc
+		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash vbmeta $dir/vbmeta.img
+		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash super $dir/super.img
+		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash dtbo $dir/dtbo.inuvik.img
+		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR reboot
+}
