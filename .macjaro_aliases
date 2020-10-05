@@ -1,0 +1,7 @@
+function 3dp {
+	if [ "$#" -ne 1 ]; then
+		echo 'pass me a gcode'
+	else
+		sudo mount -a && sudo cp $1 /home/adam/sd && sudo umount /home/adam/sd && echo 'file copied successfully'
+	fi
+}

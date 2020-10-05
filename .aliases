@@ -1,6 +1,8 @@
 HISTSIZE=20000
 HISTFILESIZE=20000
 
+source /home/$USER/.conf/.local_aliases
+
 ##META
 alias vimrc="vim /home/$USER/.conf/.aliases"
 alias uprc="source /home/$USER/.bashrc"
@@ -57,16 +59,6 @@ alias munt="mount"
 alias moun="mount"
 
 ##FUNCTIONS
-
-function 3dp {
-	if [ "$#" -ne 1 ]; then
-		echo 'pass me a gcode'
-	else
-			sudo mount -a
-			sudo cp $1 /home/adam/sd
-			sudo umount sd
-	fi
-}
 
 #gets filename from full path
 function qgrep {
