@@ -1,7 +1,7 @@
 HISTSIZE=20000
 HISTFILESIZE=20000
 
-source ./.local_aliases
+source /home/$USER/.conf/.local_aliases
 
 ##META
 alias vimrc="vim /home/$USER/.conf/.aliases"
@@ -25,7 +25,7 @@ alias qfind="find . -iname"
 alias utar="tar -xzvf"
 
 ##ERRONEOUS INPUT HANDLERS
- #case
+#case
 alias LL="ls -al"
 alias L="ls -l"
 alias LH="ls -a"
@@ -38,7 +38,7 @@ alias GET="get"
 alias CP="cp"
 alias CD="cd"
 
- #spelling
+#spelling
 alias k="l"
 alias fdsik="fdisk"
 alias ipa="ip a"
@@ -59,7 +59,8 @@ alias munt="mount"
 alias moun="mount"
 
 ##FUNCTIONS
- #gets filename from full path
+
+#gets filename from full path
 function qgrep {
 	grep -rEIn $1 2>/dev/null
 }
@@ -77,141 +78,141 @@ function qfindd {
 }
 
 function fname {
-    echo ${1##*/}
+	echo ${1##*/}
 }
 
 function hide {
-    for var in $@
-        do
-	    mv $var $var.hidden
-	done
+	for var in $@
+		do
+			mv $var $var.hidden
+				done
 }
 
 function unhide {
-    for var in $@
-        do
-	    mv $var ${var%.*}
-	done
+	for var in $@
+		do
+			mv $var ${var%.*}
+		done
 }
 
 function echo_os {
 	foo=$(lsb_release -i)
-	echo ${foo#*:}
+		echo ${foo#*:}
 }
 
 function size {
-    du -b $1 | awk '{print $1;}'
+	du -b $1 | awk '{print $1;}'
 }
 
- #cp deluxe =) -- lets user see progress
+#cp deluxe =) -- lets user see progress
 function cpd {
-    dest=$2/$(fname $1)
-    dd if=$1 ibs=1M status=none | pv -s $(size $1) | dd of=$dest obs=1M status=none oflag=direct
-    chmod --reference=$1 $dest
+	dest=$2/$(fname $1)
+		dd if=$1 ibs=1M status=none | pv -s $(size $1) | dd of=$dest obs=1M status=none oflag=direct
+		chmod --reference=$1 $dest
 }
 
 function mkdir {
-    /bin/mkdir $1
-    cd $1
+	/bin/mkdir $1
+		cd $1
 }
 
 function liveUSB {
-        sudo dd if=$1 of=$2 bs=4M conv=fdatasync status=progress oflag=direct
+	sudo dd if=$1 of=$2 bs=4M conv=fdatasync status=progress oflag=direct
 }
 
 function get {
-        cp $1 ./
+	cp $1 ./
 }
 
 function pretty_json {
-        $1 | python -m json.tool
+	$1 | python -m json.tool
 }
 
 function sh256chk {
-        echo "$1 *$2" | shasum -a 256 --check
+	echo "$1 *$2" | shasum -a 256 --check
 }
 
- #tar the contents of the pwd
+#tar the contents of the pwd
 function tarpwd { 
-    tar -czvf $(fname $(pwd)).tar.gz $(pwd)
+	tar -czvf $(fname $(pwd)).tar.gz $(pwd)
 }
 
 function greph {
-    history | grep $1 | tail
+	history | grep $1 | tail
 }
 
 function showme {
-    let req=$2
-    if [ "$#" -ne 3 ]; then
-        len=20
-    else
-        len=$3
-    fi
-    let end=$req+$len
-    let tot=$len+10
-    cat -n $1 | head -$end | tail -$tot
+	let req=$2
+		if [ "$#" -ne 3 ]; then
+			len=20
+		else
+			len=$3
+				fi
+				let end=$req+$len
+				let tot=$len+10
+				cat -n $1 | head -$end | tail -$tot
 }
 
 ###USER NOTES - USEFUL COMMANDS
- ##commands in succession
-   #run b iff a is sucessful
-       #$a && b
-   #run b even if a fails
-       #$a;b
-   #run b if a never even finishes
-       #$a & b
- ##Add user to a group
-   #gpasswd -a <username> <groupname>
- ##Get OS version
-    #lsb_release -a
- ##Netcat send
-    #nc <ip> <port> < <filename>
- ##Netcat receive
-    #nc -l <port> > <filename>
- ##Netcat a whole directory
-    #tar cfvz - <directory> | nc <ip> <port>
- ##Get sizeof a file/directory
-    #du -sh <filename>
- ##untar a .gz file
-    #tar -xvzf
- ##ifttt triggers
-    #curl -X POST https://maker.ifttt.com/trigger/<event>/with/key/ceyFl30ngD4ES9fFogAKfl
- ##set var to result of cmd
-     #dir=`cat sometextfile.txt`
- ##xargs
-    #By default xargs reads items from standard input as separated by blanks and executes a command once for each argument.
-    #e.g.
-	# echo 'one two three' | xargs mkdir
-        # will execute: 
-		# $mkdir one 
-		# $mkdir two
-		# $mkdir three
- ##grep for multiple strings at once
-    #$grep -E 'file1|file2|file3'
- ##to add line numbers to vim, add this line to ~/.vimrc
-     # :set number
- ##to add syntax-highlighting to a specific file type, add this line to ~/.vimrc
-     #autocmd BufNewFile,BufRead .aliases set syntax=sh
- ##change date
-     #e.g. to 3:14am on dec 7 1992
-	#$date 1207031492
- ##string manipulation
-    #remove everything after & including last matching substring
-	#${string%substring*}
-		#e.g foo="letter" && echo ${foo%t*}
-		#will print "let"
-    #remove everything after & including first matching substring
-	#${string%%substring*}
-		#e.g foo="letter" && echo ${foo%%t*}
-		#will print "le"
-    #remove everything before & including first matching substring
-	#${string#*substring}
-		#e.g foo="letter" && echo ${foo#*t}
-		#will print "ter"
-    #remove everything before & including last matching substring
-	#${string##*substring}
-		#e.g foo="letter" && echo ${foo##*t}
-		#will print "le"
-    #manipulate string after a pipe
-	#echo letter | (read x; echo ${x%t*})
-	#will print "let"
+##commands in succession
+#run b iff a is sucessful
+#$a && b
+#run b even if a fails
+#$a;b
+#run b if a never even finishes
+#$a & b
+##Add user to a group
+#gpasswd -a <username> <groupname>
+##Get OS version
+#lsb_release -a
+##Netcat send
+#nc <ip> <port> < <filename>
+##Netcat receive
+#nc -l <port> > <filename>
+##Netcat a whole directory
+#tar cfvz - <directory> | nc <ip> <port>
+##Get sizeof a file/directory
+#du -sh <filename>
+##untar a .gz file
+#tar -xvzf
+##ifttt triggers
+#curl -X POST https://maker.ifttt.com/trigger/<event>/with/key/ceyFl30ngD4ES9fFogAKfl
+##set var to result of cmd
+#dir=`cat sometextfile.txt`
+##xargs
+#By default xargs reads items from standard input as separated by blanks and executes a command once for each argument.
+#e.g.
+# echo 'one two three' | xargs mkdir
+# will execute: 
+# $mkdir one 
+# $mkdir two
+# $mkdir three
+##grep for multiple strings at once
+#$grep -E 'file1|file2|file3'
+##to add line numbers to vim, add this line to ~/.vimrc
+# :set number
+##to add syntax-highlighting to a specific file type, add this line to ~/.vimrc
+#autocmd BufNewFile,BufRead .aliases set syntax=sh
+##change date
+#e.g. to 3:14am on dec 7 1992
+#$date 1207031492
+##string manipulation
+#remove everything after & including last matching substring
+#${string%substring*}
+#e.g foo="letter" && echo ${foo%t*}
+#will print "let"
+#remove everything after & including first matching substring
+#${string%%substring*}
+#e.g foo="letter" && echo ${foo%%t*}
+#will print "le"
+#remove everything before & including first matching substring
+#${string#*substring}
+#e.g foo="letter" && echo ${foo#*t}
+#will print "ter"
+#remove everything before & including last matching substring
+#${string##*substring}
+#e.g foo="letter" && echo ${foo##*t}
+#will print "le"
+#manipulate string after a pipe
+#echo letter | (read x; echo ${x%t*})
+#will print "let"
