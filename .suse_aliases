@@ -19,6 +19,7 @@ alias lscos="ct lsco -r -me -cview -short"
 alias jamr_pizza_util="echo 'boot -noclose -elf -bsu flash0.bsu && ifconfig eth2 -auto && android fastboot -device=flash0 -transport=tcp' && echo '$(tput setab 1)run ^THIS^ cmd in BOLT & then run vTHISv cmd here$(tput sgr 0)' && echo '/home/oakeada/c_files/androidtv/scripts/update_joey4.sh 192.168.1.105 && eth2_off'"
 alias jamr_hopper="echo '$(tput setab 3) mount -t nfs -o soft,nolock 192.168.1.1:/home/oakeada/mnt/ /mnt/mine$(tput sgr 0)'"
 alias jamr_snap="echo 'boot -noclose -elf -bsu flash0.bsu && ifconfig eth1 -auto && android fastboot -device=flash0 -transport=tcp' && echo '$(tput setab 1)run ^THIS^ cmd in BOLT & then run vTHISv cmd here$(tput sgr 0)' && echo '/home/oakeada/c_files/androidtv/scripts/update_joey4.sh 192.168.1.106'"
+alias jamr_p1="echo 'boot -raw -addr=0x42000000 -bsu flash0.bsu && ifconfig eth2 -auto && android fastboot -device=flash0 -transport=tcp' && echo '$(tput setab 1)run ^THIS^ cmd in BOLT & then run vTHISv cmd here$(tput sgr 0)' && echo '/home/oakeada/andorid_misc/update_p1.sh 192.168.1.106'"
 
 #frequent dirs
 alias aroot="cd ~/ATV/android-q-10"
@@ -105,8 +106,19 @@ function kmine {
 				done
 }
 
+function save_images {
+	if [ "$#" -ne 1 ]; then
+	        dir=$PWD
+	else
+		dir=$1
+	fi
+	
+	echo "Copying images to $dir"
+	cp /home/oakeada/ATV/android-q-10/out/target/product/inuvik/*.img $dir
+}
+
 #STB jammers
-function update_joey {
+function update_pizza {
 	if [ "$#" -ne 1 ]; then
 		dir=/home/oakeada/ATV/android-q-10/out/target/product/inuvik
 	else
@@ -136,6 +148,22 @@ function update_snap {
 		IP_ADDR=192.168.1.106
 		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR set_active a
 		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR erase misc
+		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash vbmeta $dir/vbmeta.img
+		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash super $dir/super.img
+		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash dtbo $dir/dtbo.inuvik.img
+		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR reboot
+}
+
+function update_p1 {
+	if [ "$#" -ne 1 ]; then
+		dir=/home/oakeada/ATV/android-q-10/out/target/product/inuvik
+	else
+		dir=$PWD
+	fi
+		echo flashing from images in $dir
+		FASTBOOT_DIR=~/ATV/android-q-10/out/host/linux-x86/bin
+
+		IP_ADDR=192.168.1.106
 		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash vbmeta $dir/vbmeta.img
 		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash super $dir/super.img
 		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash dtbo $dir/dtbo.inuvik.img
