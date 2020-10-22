@@ -23,6 +23,8 @@ alias sshupdate="echo \"\" > /home/$USER/.ssh/known_hosts"
 alias addtopath="PATH=$PATH:$(pwd)"
 alias qfind="find . -iname"
 alias utar="tar -xzvf"
+alias mkdir="/bin/mkdir"
+
 
 ##ERRONEOUS INPUT HANDLERS
 #case
@@ -111,11 +113,6 @@ function cpd {
 		chmod --reference=$1 $dest
 }
 
-function mkdir {
-	/bin/mkdir $1
-		cd $1
-}
-
 function liveUSB {
 	sudo dd if=$1 of=$2 bs=4M conv=fdatasync status=progress oflag=direct
 }
@@ -142,15 +139,22 @@ function greph {
 }
 
 function showme {
-	let req=$2
-		if [ "$#" -ne 3 ]; then
-			len=20
-		else
-			len=$3
-				fi
-				let end=$req+$len
-				let tot=$len+10
-				cat -n $1 | head -$end | tail -$tot
+        if [ "$#" -ne 2 ]; then
+                  len=20
+        else
+                  len=$2
+        fi
+
+	foo=$1
+	lineNum=${foo##*:}
+	let lineNumb=$lineNum-1
+	let end=$lineNum+$len
+	path=${foo%%:*}
+	theLine=$(cat -n $path | head -$lineNum | tail -1)	
+
+	cat -n $path | head -$lineNumb | tail -$len
+	echo "$(tput setab 2) $theLine $(tput sgr 0)"
+	cat -n $path | head -$end | tail -$len
 }
 
 ###USER NOTES - USEFUL COMMANDS
