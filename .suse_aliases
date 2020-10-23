@@ -1,5 +1,4 @@
 ##UPKEEP
-alias savrc="cp ~/.conf/.aliases ~/myshare/conf; cp ~/.conf/.suse_aliases ~/myshare/conf; cp ~/.conf/.vimrc ~/myshare/conf; cp ~/.conf/setup.sh ~/myshare/conf; cp ~/.conf/bookmarks.html ~/myshare/conf"
 alias vimsrc="vim /home/oakeada/.conf/.suse_aliases"
 
 ##SCRIPTS & BINARIES
@@ -17,11 +16,8 @@ alias lscos="ct lsco -r -me -cview -short"
 
 #jamming references
 alias jamr_pizza_util="echo 'boot -noclose -elf -bsu flash0.bsu && ifconfig eth2 -auto && android fastboot -device=flash0 -transport=tcp' && echo '$(tput setab 1)run ^THIS^ cmd in BOLT & then run vTHISv cmd here$(tput sgr 0)' && echo '/home/oakeada/c_files/androidtv/scripts/update_joey4.sh 192.168.1.105 && eth2_off'"
-
 alias jamr_hopper="echo '$(tput setab 3) mount -t nfs -o soft,nolock 192.168.1.1:/home/oakeada/mnt/ /mnt/mine$(tput sgr 0)'"
-
 alias jamr_snap="echo 'boot -raw -addr=0x42000000 -bsu flash0.bsu && ifconfig eth1 -auto && android fastboot -device=flash0 -transport=tcp' && echo '$(tput setab 1)run ^THIS^ cmd in BOLT & then run vTHISv cmd here$(tput sgr 0)' && echo 'update_snap'"
-
 alias jamr_p1="echo 'boot -raw -addr=0x42000000 -bsu flash0.bsu && ifconfig eth2 -auto && android fastboot -device=flash0 -transport=tcp' && echo '$(tput setab 1)run ^THIS^ cmd in BOLT & then run vTHISv cmd in img dir$(tput sgr 0)' && echo 'update_p1'"
 
 #frequent dirs
@@ -30,23 +26,26 @@ alias stories="cd ~/stories; l"
 alias tip="cd ~/tip;ls -l"
 
 #smart switches
-alias pizza_off="curl -X POST https://maker.ifttt.com/trigger/g1_off/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
-alias pizza_on="curl -X POST https://maker.ifttt.com/trigger/g1_on/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
-alias reboot_p1="pizza_off && sleep 20 && pizza_on"
+alias p1_off="curl -X POST https://maker.ifttt.com/trigger/g1_off/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
+alias p1_on="curl -X POST https://maker.ifttt.com/trigger/g1_on/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
+alias reboot_p1="p1_off && sleep 20 && p1_on"
 
-alias eth2_on="curl -X POST https://maker.ifttt.com/trigger/g4_on/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
-alias eth2_off="curl -X POST https://maker.ifttt.com/trigger/g4_off/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
+alias eth2_on="curl -X POST https://maker.ifttt.com/trigger/w1_on/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
+alias eth2_off="curl -X POST https://maker.ifttt.com/trigger/w1_off/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
 
-alias snap_on="curl -X POST https://maker.ifttt.com/trigger/w2_on/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
-alias snap_off="curl -X POST https://maker.ifttt.com/trigger/w2_off/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
+alias snap_on="curl -X POST https://maker.ifttt.com/trigger/g4_on/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
+alias snap_off="curl -X POST https://maker.ifttt.com/trigger/g4_off/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
 alias reboot_snap="snap_off && sleep 15 && snap_on"
 
 alias suse_on="curl -X POST https://maker.ifttt.com/trigger/g2_on/with/key/ceyFl30ngD4ES9fFogAKfl"
 alias suse_off="curl -X POST https://maker.ifttt.com/trigger/g2_off/with/key/ceyFl30ngD4ES9fFogAKfl"
 alias reboot_suse="suse_off && sleep 20 && suse_on"
 
-##FUNCTIONS
+#misc
+alias shhatv="echo 'echo 3 >  /proc/sysrq-trigger'"
+alias adbc="adb connect 192.168.1.105:5555 && adb root"
 
+##FUNCTIONS
 #Clearcase functions
 function fmerge {
 	if [ "$#" -ne 1 ]; then

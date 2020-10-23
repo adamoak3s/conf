@@ -158,65 +158,65 @@ function showme {
 }
 
 ###USER NOTES - USEFUL COMMANDS
-##commands in succession
-#run b iff a is sucessful
-#$a && b
-#run b even if a fails
-#$a;b
-#run b if a never even finishes
-#$a & b
-##Add user to a group
-#gpasswd -a <username> <groupname>
-##Get OS version
-#lsb_release -a
-##Netcat send
-#nc <ip> <port> < <filename>
-##Netcat receive
-#nc -l <port> > <filename>
-##Netcat a whole directory
-#tar cfvz - <directory> | nc <ip> <port>
-##Get sizeof a file/directory
-#du -sh <filename>
-##untar a .gz file
-#tar -xvzf
-##ifttt triggers
-#curl -X POST https://maker.ifttt.com/trigger/<event>/with/key/ceyFl30ngD4ES9fFogAKfl
-##set var to result of cmd
-#dir=`cat sometextfile.txt`
-##xargs
-#By default xargs reads items from standard input as separated by blanks and executes a command once for each argument.
-#e.g.
-# echo 'one two three' | xargs mkdir
-# will execute: 
-# $mkdir one 
-# $mkdir two
-# $mkdir three
-##grep for multiple strings at once
-#$grep -E 'file1|file2|file3'
-##to add line numbers to vim, add this line to ~/.vimrc
-# :set number
-##to add syntax-highlighting to a specific file type, add this line to ~/.vimrc
-#autocmd BufNewFile,BufRead .aliases set syntax=sh
-##change date
-#e.g. to 3:14am on dec 7 1992
-#$date 1207031492
-##string manipulation
-#remove everything after & including last matching substring
-#${string%substring*}
-#e.g foo="letter" && echo ${foo%t*}
-#will print "let"
-#remove everything after & including first matching substring
-#${string%%substring*}
-#e.g foo="letter" && echo ${foo%%t*}
-#will print "le"
-#remove everything before & including first matching substring
-#${string#*substring}
-#e.g foo="letter" && echo ${foo#*t}
-#will print "ter"
-#remove everything before & including last matching substring
-#${string##*substring}
-#e.g foo="letter" && echo ${foo##*t}
-#will print "le"
-#manipulate string after a pipe
-#echo letter | (read x; echo ${x%t*})
-#will print "let"
+ ##commands in succession
+  #run b iff a is sucessful
+   #$a && b
+  #run b even if a fails
+   #$a;b
+  #run b if a never even finishes
+   #$a & b
+ ##Add user to a group
+  #gpasswd -a <username> <groupname>
+ ##Get OS version
+  #lsb_release -a
+ ##Netcat send
+  #nc <ip> <port> < <filename>
+ ##Netcat receive
+  #nc -l <port> > <filename>
+ ##Netcat a whole directory
+  #tar cfvz - <directory> | nc <ip> <port>
+ ##Get sizeof a file/directory
+  #du -sh <filename>
+ ##untar a .gz file
+  #tar -xvzf
+ ##ifttt triggers
+  #curl -X POST https://maker.ifttt.com/trigger/<event>/with/key/ceyFl30ngD4ES9fFogAKfl
+ ##set var to result of cmd
+  #dir=`cat sometextfile.txt`
+ ##xargs
+ #By default xargs reads items from standard input as separated by blanks and executes a command once for each argument.
+  #e.g.
+   # echo 'one two three' | xargs mkdir
+    # will execute: 
+     # $mkdir one 
+     # $mkdir two
+     # $mkdir three
+ ##grep for multiple strings at once
+  #$grep -E 'file1|file2|file3'
+ ##to add line numbers to vim, add this line to ~/.vimrc
+  # :set number
+ ##to add syntax-highlighting to a specific file type, add this line to ~/.vimrc
+  #autocmd BufNewFile,BufRead .aliases set syntax=sh
+ ##change date
+  #e.g. to 3:14am on dec 7 1992
+   #$date 1207031492
+ ##string manipulation
+  #remove everything after & including last matching substring
+   #${string%substring*}
+    #e.g foo="letter" && echo ${foo%t*}
+     #will print "let"
+  #remove everything after & including first matching substring
+   #${string%%substring*}
+    #e.g foo="letter" && echo ${foo%%t*}
+     #will print "le"
+  #remove everything before & including first matching substring
+   #${string#*substring}
+    #e.g foo="letter" && echo ${foo#*t}
+     #will print "ter"
+  #remove everything before & including last matching substring
+   #${string##*substring}
+    #e.g foo="letter" && echo ${foo##*t}
+     #will print "le"
+  #manipulate string after a pipe
+   #echo letter | (read x; echo ${x%t*})
+    #will print "let"
