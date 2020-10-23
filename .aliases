@@ -220,3 +220,8 @@ function showme {
   #manipulate string after a pipe
    #echo letter | (read x; echo ${x%t*})
     #will print "let"
+ ##git
+  #show all currently tracked files
+   #git ls-tree -r master --name-only
+
+
