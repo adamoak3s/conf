@@ -44,6 +44,7 @@ alias reboot_suse="suse_off && sleep 20 && suse_on"
 #misc
 alias shhatv="echo 'echo 3 >  /proc/sysrq-trigger'"
 alias adbc="adb connect 192.168.1.105:5555 && adb root"
+alias loge="echo 'LOG_ERROR(\"\n\n\nHello from %s\n\n\n\", __FUNCTION__);'"
 
 ##FUNCTIONS
 #Clearcase functions
