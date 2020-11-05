@@ -67,6 +67,10 @@ function qgrep {
 	grep -rEIn $1 2>/dev/null
 }
 
+function hgrep {
+	grep -n $1 $(find . -iname *.h) 2>/dev/null
+}
+
 function ccc {
     for i in {1..40}
     do
@@ -150,11 +154,11 @@ function showme {
 	let lineNumb=$lineNum-1
 	let end=$lineNum+$len
 	path=${foo%%:*}
-	theLine=$(cat -n $path | head -$lineNum | tail -1)	
+	theLine=$(cat $path | head -$lineNum | tail -1)	
 
-	cat -n $path | head -$lineNumb | tail -$len
+	cat $path | head -$lineNumb | tail -$len
 	echo "$(tput setab 2) $theLine $(tput sgr 0)"
-	cat -n $path | head -$end | tail -$len
+	cat $path | head -$end | tail -$len
 }
 
 ###USER NOTES - USEFUL COMMANDS
