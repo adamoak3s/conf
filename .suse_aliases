@@ -30,8 +30,14 @@ alias p1_off="curl -X POST https://maker.ifttt.com/trigger/g1_off/with/key/ceyFl
 alias p1_on="curl -X POST https://maker.ifttt.com/trigger/g1_on/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
 alias reboot_p1="p1_off && sleep 20 && p1_on"
 
+alias eth1_on="curl -X POST https://maker.ifttt.com/trigger/w2_on/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
+alias eth1_off="curl -X POST https://maker.ifttt.com/trigger/w2_off/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
+
 alias eth2_on="curl -X POST https://maker.ifttt.com/trigger/w1_on/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
 alias eth2_off="curl -X POST https://maker.ifttt.com/trigger/w1_off/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
+
+alias eth2="eth1_off && eth2_on"
+alias eth1="eth2_off && eth1_on"
 
 alias snap_on="curl -X POST https://maker.ifttt.com/trigger/g4_on/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
 alias snap_off="curl -X POST https://maker.ifttt.com/trigger/g4_off/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
@@ -45,7 +51,8 @@ alias reboot_suse="suse_off && sleep 20 && suse_on"
 alias shhatv="echo 'echo 3 >  /proc/sysrq-trigger'"
 alias adbc="adb connect 192.168.1.105:5555 && adb root"
 alias loge="echo 'LOG_ERROR(\"\n\n\nHello from %s\n\n\n\", __FUNCTION__);'"
-
+alias pi="echo '10.74.148.212'"
+alias apush="eth2_on && sleep 10 && adb connect 192.168.1.105:5555 && adb root && adb push /home/oakeada/amnt/esncmd /data/mine && eth2_off"
 ##FUNCTIONS
 #Clearcase functions
 function fmerge {
@@ -75,6 +82,11 @@ function eclipse {
 
 	mv $1.keep $1
 	chmod 777 $1
+}
+
+function edcs {
+	config_spec="/home/oakeada/config_specs/$(ls_tag).cs"
+	vim $config_spec && setcs $config_spec	
 }
 
 function cia {
