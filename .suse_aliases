@@ -18,7 +18,8 @@ alias lscos="ct lsco -r -me -cview -short"
 alias jamr_pizza_util="echo 'boot -noclose -elf -bsu flash0.bsu && ifconfig eth2 -auto && android fastboot -device=flash0 -transport=tcp' && echo '$(tput setab 1)run ^THIS^ cmd in BOLT & then run vTHISv cmd here$(tput sgr 0)' && echo '/home/oakeada/c_files/androidtv/scripts/update_joey4.sh 192.168.1.105 && eth2_off'"
 alias jamr_hopper="echo '$(tput setab 3) mount -t nfs -o soft,nolock 192.168.1.1:/home/oakeada/mnt/ /mnt/mine$(tput sgr 0)'"
 alias jamr_snap="echo 'boot -raw -addr=0x42000000 -bsu flash0.bsu && ifconfig eth1 -auto && android fastboot -device=flash0 -transport=tcp' && echo '$(tput setab 1)run ^THIS^ cmd in BOLT & then run vTHISv cmd here$(tput sgr 0)' && echo 'update_snap'"
-alias jamr_p1="echo 'boot -raw -addr=0x42000000 -bsu flash0.bsu && ifconfig eth2 -auto && android fastboot -device=flash0 -transport=tcp' && echo '$(tput setab 1)run ^THIS^ cmd in BOLT & then run vTHISv cmd in img dir$(tput sgr 0)' && echo 'update_p1'"
+alias jamr_mj4="echo 'boot -raw -addr=0x42000000 -bsu flash0.bsu && ifconfig eth2 -auto && android fastboot -device=flash0 -transport=tcp' && echo '$(tput setab 1)run ^THIS^ cmd in BOLT & then run vTHISv cmd in img dir$(tput sgr 0)' && echo 'update_mj4'"
+alias jamr_wj4="echo 'boot -raw -noclose -bsu -addr=0x42000000 -max=0x20000 flash0.bsu && ifconfig eth1 -auto && android fastboot -device=flash0 -transport=tcp'  && echo '$(tput setab 1)run ^THIS^ cmd in BOLT & then run vTHISv cmd in img dir$(tput sgr 0)' && echo 'update_wj4'"
 
 #frequent dirs
 alias aroot="cd ~/ATV/android-q-10"
@@ -188,7 +189,7 @@ function update_snap {
 		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR reboot
 }
 
-function update_p1 {
+function update_mj4 {
 		dir=$PWD
 		echo flashing from images in $dir
 		FASTBOOT_DIR=~/ATV/android-q-10/out/host/linux-x86/bin
@@ -201,5 +202,21 @@ function update_p1 {
 		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash vbmeta $dir/vbmeta.img
 		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash super $dir/super.img
 		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash dtbo $dir/dtbo.ATVMJ4.img
+		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR reboot
+}
+
+function update_wj4 {
+		dir=$PWD
+		echo flashing from images in $dir
+		FASTBOOT_DIR=~/ATV/android-q-10/out/host/linux-x86/bin
+
+		IP_ADDR=192.168.1.120
+		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR set_active a
+		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR erase misc
+		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash boot $dir/boot.img
+		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash userdata $dir/userdata.img
+		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash vbmeta $dir/vbmeta.img
+		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash super $dir/super.img
+		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash dtbo $dir/dtbo.ATVWJ4.img
 		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR reboot
 }

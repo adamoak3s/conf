@@ -21,7 +21,7 @@ alias x="exit"
 alias gateway="ip route | grep default"
 alias sshupdate="echo \"\" > /home/$USER/.ssh/known_hosts"
 alias addtopath="PATH=$PATH:$(pwd)"
-alias qfind="find . -iname"
+#alias qfind="find . -iname"
 alias utar="tar -xzvf"
 alias mkdir="/bin/mkdir"
 
@@ -63,6 +63,14 @@ alias moun="mount"
 ##FUNCTIONS
 
 #gets filename from full path
+function revslash {
+	echo  $1 | tr '\\' '/'
+}
+
+function qfind {
+	find . -iname $1 2>/dev/null
+}
+
 function qgrep {
 	grep -rEIn $1 2>/dev/null
 }
