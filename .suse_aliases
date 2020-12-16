@@ -220,3 +220,19 @@ function update_wj4 {
 		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash dtbo $dir/dtbo.ATVWJ4.img
 		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR reboot
 }
+
+function update_wj4_home {
+		dir=$PWD
+		echo flashing from images in $dir
+		FASTBOOT_DIR=~/ATV/android-q-10/out/host/linux-x86/bin
+
+		IP_ADDR=71.218.94.46
+		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR set_active a
+		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR erase misc
+		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash boot $dir/boot.img
+		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash userdata $dir/userdata.img
+		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash vbmeta $dir/vbmeta.img
+		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash super $dir/super.img
+		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash dtbo $dir/dtbo.ATVWJ4.img
+		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR reboot
+}
