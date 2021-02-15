@@ -21,15 +21,19 @@ alias jamr_snap="echo 'boot -raw -addr=0x42000000 -bsu flash0.bsu && ifconfig et
 alias jamr_mj4="echo 'boot -raw -addr=0x42000000 -bsu flash0.bsu && ifconfig eth2 -auto && android fastboot -device=flash0 -transport=tcp' && echo '$(tput setab 1)run ^THIS^ cmd in BOLT & then run vTHISv cmd in img dir$(tput sgr 0)' && echo 'update_mj4'"
 alias jamr_wj4="echo 'boot -raw -noclose -bsu -addr=0x42000000 -max=0x20000 flash0.bsu && ifconfig eth1 -auto && android fastboot -device=flash0 -transport=tcp'  && echo '$(tput setab 1)run ^THIS^ cmd in BOLT & then run vTHISv cmd in img dir$(tput sgr 0)' && echo 'update_wj4'"
 
+alias dmjar="echo '/home/oakeada/ATV/android-q-10/vendor/dish/apks/DeviceManager/DeviceMgr.RemoteSvc.NDrain/app/src/main/libs/utils.jar'"
+
 #frequent dirs
 alias aroot="cd ~/ATV/android-q-10"
+alias sepolicy="cd /home/oakeada/ATV/android-q-10/device/broadcom/inuvik/dish_selinux_policy"
+alias aout="cd /home/oakeada/ATV/android-q-10/out/target/product"
 alias stories="cd ~/stories; l"
 alias tip="cd ~/tip;ls -l"
 
 #smart switches
-alias p1_off="curl -X POST https://maker.ifttt.com/trigger/g1_off/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
-alias p1_on="curl -X POST https://maker.ifttt.com/trigger/g1_on/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
-alias reboot_p1="p1_off && sleep 20 && p1_on"
+alias mj4_off="curl -X POST https://maker.ifttt.com/trigger/g1_off/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
+alias mj4_on="curl -X POST https://maker.ifttt.com/trigger/g1_on/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
+alias reboot_mj4="mj4_off && sleep 20 && mj4_on"
 
 alias eth1_on="curl -X POST https://maker.ifttt.com/trigger/w2_on/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
 alias eth1_off="curl -X POST https://maker.ifttt.com/trigger/w2_off/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
@@ -37,12 +41,9 @@ alias eth1_off="curl -X POST https://maker.ifttt.com/trigger/w2_off/with/key/cey
 alias eth2_on="curl -X POST https://maker.ifttt.com/trigger/w1_on/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
 alias eth2_off="curl -X POST https://maker.ifttt.com/trigger/w1_off/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
 
-alias eth2="eth1_off && eth2_on"
-alias eth1="eth2_off && eth1_on"
-
-alias snap_on="curl -X POST https://maker.ifttt.com/trigger/g4_on/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
-alias snap_off="curl -X POST https://maker.ifttt.com/trigger/g4_off/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
-alias reboot_snap="snap_off && sleep 15 && snap_on"
+alias wj4_on="curl -X POST https://maker.ifttt.com/trigger/g4_on/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
+alias wj4_off="curl -X POST https://maker.ifttt.com/trigger/g4_off/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
+alias reboot_wj4="wj4_off && sleep 15 && wj4_on"
 
 alias suse_on="curl -X POST https://maker.ifttt.com/trigger/g2_on/with/key/ceyFl30ngD4ES9fFogAKfl"
 alias suse_off="curl -X POST https://maker.ifttt.com/trigger/g2_off/with/key/ceyFl30ngD4ES9fFogAKfl"
@@ -51,10 +52,11 @@ alias reboot_suse="suse_off && sleep 20 && suse_on"
 #misc
 alias shhatv="echo 'echo 3 >  /proc/sysrq-trigger'"
 alias adbc="adb connect 192.168.1.105:5555 && adb root"
-alias loge="echo 'LOG_ERROR(\"\n\n\nHello from %s\n\n\n\", __FUNCTION__);'"
+alias loge="echo 'LOG_ERROR(\"%s():\", __FUNCTION__);'"
 alias pi="echo '10.74.148.212'"
 alias apush="eth2_on && sleep 10 && adb connect 192.168.1.105:5555 && adb root && adb push /home/oakeada/amnt/esncmd /data/mine && eth2_off"
-##FUNCTIONS
+alias make_jar="cd /home/oakeada/ATV/android-q-10/vendor/dish/apps/sgsLite/atv_utils/build/intermediates/javac/debug/classes && jar -cf utils.jar com/dish/atv/* && cp utils.jar /home/oakeada/ATV/android-q-10/vendor/dish/apks/DeviceManager/DeviceMgr.RemoteSvc.NDrain/app/src/main/libs/com.dish.atv/utils.jar && cd -"
+##FUNCTION
 #Clearcase functions
 function fmerge {
 	if [ "$#" -ne 1 ]; then
@@ -139,7 +141,7 @@ function ktip {
 function kmine {
 	for var in $@
 		do
-			cp $var $var.mine
+			mv $var $var.mine
 				done
 }
 
@@ -162,7 +164,7 @@ function update_pizza {
 		dir=$PWD
 	fi
 		echo flashing from images in $dir
-		FASTBOOT_DIR=~/ATV/android-q-10/out/host/linux-x86/bin
+		FASTBOOT_DIR=~/bin
 
 		IP_ADDR=192.168.1.105
 		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR set_active a
@@ -176,9 +178,9 @@ function update_pizza {
 function update_snap {
 		dir=$PWD
 		echo flashing from images in $dir
-		FASTBOOT_DIR=~/ATV/android-q-10/out/host/linux-x86/bin
+		FASTBOOT_DIR=~/bin
 
-		IP_ADDR=192.168.1.105
+		IP_ADDR=192.168.1.104
 		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR set_active a
 		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR erase misc
 		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash boot $dir/boot.img
@@ -192,7 +194,7 @@ function update_snap {
 function update_mj4 {
 		dir=$PWD
 		echo flashing from images in $dir
-		FASTBOOT_DIR=~/ATV/android-q-10/out/host/linux-x86/bin
+		FASTBOOT_DIR=~/bin
 
 		IP_ADDR=192.168.1.105
 		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR set_active a
@@ -208,7 +210,7 @@ function update_mj4 {
 function update_wj4 {
 		dir=$PWD
 		echo flashing from images in $dir
-		FASTBOOT_DIR=~/ATV/android-q-10/out/host/linux-x86/bin
+		FASTBOOT_DIR=~/bin
 
 		IP_ADDR=192.168.1.120
 		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR set_active a
@@ -224,15 +226,11 @@ function update_wj4 {
 function update_wj4_home {
 		dir=$PWD
 		echo flashing from images in $dir
-		FASTBOOT_DIR=~/ATV/android-q-10/out/host/linux-x86/bin
+		FASTBOOT_DIR=~/bin
 
 		IP_ADDR=71.218.94.46
 		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR set_active a
 		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR erase misc
-		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash boot $dir/boot.img
-		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash userdata $dir/userdata.img
-		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash vbmeta $dir/vbmeta.img
 		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash super $dir/super.img
-		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash dtbo $dir/dtbo.ATVWJ4.img
 		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR reboot
 }
