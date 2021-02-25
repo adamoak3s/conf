@@ -61,6 +61,20 @@ alias munt="mount"
 alias moun="mount"
 
 ##FUNCTIONS
+function upfind {
+	startDir=$PWD
+	while [[ $PWD != / ]] ; do
+	    find "$PWD"/ -maxdepth 1 -iname "$@"
+	    cd ..
+	done
+	cd $startDir
+}
+
+
+function mkdir {
+	/usr/bin/mkdir $1
+	export NEW_DIR = "hello"
+}
 
 #gets filename from full path
 function revslash {
