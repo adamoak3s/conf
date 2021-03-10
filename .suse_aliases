@@ -31,23 +31,17 @@ alias stories="cd ~/stories; l"
 alias tip="cd ~/tip;ls -l"
 
 #smart switches
-alias mj4_off="curl -X POST https://maker.ifttt.com/trigger/g1_off/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
-alias mj4_on="curl -X POST https://maker.ifttt.com/trigger/g1_on/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
-alias reboot_mj4="mj4_off && sleep 20 && mj4_on"
+alias mj4_off="_toggle g1_off"
+alias mj4_on="toggle g1_on"
+alias reboot_mj4="mj4_off && sleep 15 && mj4_on"
 
-alias eth1_on="curl -X POST https://maker.ifttt.com/trigger/w2_on/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
-alias eth1_off="curl -X POST https://maker.ifttt.com/trigger/w2_off/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
-
-alias eth2_on="curl -X POST https://maker.ifttt.com/trigger/w1_on/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
-alias eth2_off="curl -X POST https://maker.ifttt.com/trigger/w1_off/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
-
-alias wj4_on="curl -X POST https://maker.ifttt.com/trigger/g4_on/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
-alias wj4_off="curl -X POST https://maker.ifttt.com/trigger/g4_off/with/key/ceyFl30ngD4ES9fFogAKfl;echo -e"
+alias wj4_on="_toggle g4_on"
+alias wj4_off="_toggle g4_off"
 alias reboot_wj4="wj4_off && sleep 15 && wj4_on"
 
-alias suse_on="curl -X POST https://maker.ifttt.com/trigger/g2_on/with/key/ceyFl30ngD4ES9fFogAKfl"
-alias suse_off="curl -X POST https://maker.ifttt.com/trigger/g2_off/with/key/ceyFl30ngD4ES9fFogAKfl"
-alias reboot_suse="suse_off && sleep 20 && suse_on"
+alias suse_on="_toggle g2_on"
+alias suse_off="_toggle g2_off"
+alias reboot_suse="suse_off && sleep 15 && suse_on"
 
 #misc
 alias shhatv="echo 'echo 3 >  /proc/sysrq-trigger'"
@@ -57,6 +51,16 @@ alias pi="echo '10.74.148.212'"
 alias apush="eth2_on && sleep 10 && adb connect 192.168.1.105:5555 && adb root && adb push /home/oakeada/amnt/esncmd /data/mine && eth2_off"
 alias make_jar="cd /home/oakeada/ATV/android-q-10/vendor/dish/apps/sgsLite/atv_utils/build/intermediates/javac/debug/classes && jar -cf utils.jar com/dish/atv/* && cp utils.jar /home/oakeada/ATV/android-q-10/vendor/dish/apks/DeviceManager/DeviceMgr.RemoteSvc.NDrain/app/src/main/libs/com.dish.atv/utils.jar && cd -"
 ##FUNCTIONS
+
+function toggle {
+	_toggle "$1_$2"
+	echo -e
+}
+
+function _toggle {
+	curl -X POST "http://maker.ifttt.com/trigger/$1/with/key/ceyFl30ngD4ES9fFogAKfl"
+	echo -e
+}
 
 #Clearcase functions
 function fmerge {
