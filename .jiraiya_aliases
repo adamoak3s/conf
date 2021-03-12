@@ -1,0 +1,8 @@
+function backup {
+	fname="Valheim-`date +%F`"
+	
+	sudo systemctl stop valheimserver.service && \
+	cp -r /home/steam/.config/unity3d/IronGate/Valheim /home/adam/valheim-backups/$fname && \
+	sudo systemctl start valheimserver.service && \
+	echo "success!"
+}
