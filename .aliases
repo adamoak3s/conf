@@ -9,7 +9,7 @@ alias uprc="source /home/$USER/.bashrc"
 alias catrc="cat /home/$USER/.conf/.aliases"
 
 ##SHORTENERS
-alias ls="ls+"
+alias ls="/home/vhserver/.conf/ls+"
 alias ll="ls -al"
 alias l="ls -l"
 alias lh="ls -a"
@@ -50,17 +50,17 @@ alias vmi="vim"
 alias cim="vim"
 alias bim="vim"
 
-alias souce="source"
+alias souce="source";
 alias sourc="source"
 alias surce="source"
-alias sorce="source"
+alias sorce="source"				
 alias soure="source"
 
 alias mont="mount"
 alias munt="mount"
 alias moun="mount"
 
-##FUNCTIONS
+##FUNCTIONS	
 function upfind {
 	startDir=$PWD
 	while [[ $PWD != / ]] ; do
