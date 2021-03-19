@@ -1,0 +1,12 @@
+#smart switches
+alias mj4_off="_toggle g1_off"
+alias mj4_on="toggle g1_on"
+alias reboot_mj4="mj4_off && sleep 15 && mj4_on"
+
+alias wj4_on="_toggle g4_on"
+alias wj4_off="_toggle g4_off"
+alias reboot_wj4="wj4_off && sleep 15 && wj4_on"
+
+alias suse_on="_toggle g2_on"
+alias suse_off="_toggle g2_off"
+alias reboot_suse="suse_off && sleep 15 && suse_on"
