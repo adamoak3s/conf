@@ -1,0 +1,6 @@
+function backup {
+	fname="Valheim-`date +%F`"
+	
+	cp -r /home/vhserver/.config/unity3d/IronGate/Valheim /home/vhserver/backups/$fname && \
+	echo "Successfully backed up!"
+}

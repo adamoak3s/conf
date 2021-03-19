@@ -23,6 +23,8 @@ alias jamr_wj4="echo 'boot -raw -noclose -bsu -addr=0x42000000 -max=0x20000 flas
 
 alias dmjar="echo '/home/oakeada/ATV/android-q-10/vendor/dish/apks/DeviceManager/DeviceMgr.RemoteSvc.NDrain/app/src/main/libs/utils.jar'"
 
+alias selinuxr="echo 'allow scontext tcontext:tclass { permission }'"
+
 #frequent dirs
 alias aroot="cd ~/ATV/android-q-10"
 alias sepolicy="cd /home/oakeada/ATV/android-q-10/device/broadcom/inuvik/dish_selinux_policy"
@@ -162,7 +164,7 @@ function afind {
 
 #STB jammers
 function jam_mj4 {
-	my_fastboot 192.168.1.105
+	my_fastboot 192.168.1.104
 }
 
 function my_fastboot {

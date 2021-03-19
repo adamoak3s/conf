@@ -1,1 +1,7 @@
-#add import statement here.
+#please try not to commit any changes to this file
+
+#add local alias file here
+LOCAL_ALIASES=
+
+#do not modify this
+source /home/$USER/.conf/$LOCAL_ALIASES
