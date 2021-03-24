@@ -61,6 +61,11 @@ alias munt="mount"
 alias moun="mount"
 
 ##FUNCTIONS
+function mdate {
+	foo="Valheim-`date +%F`"
+	cp -r /home/oakeada/testy /home/oakeada/$foo
+}
+
 function upfind {
 	startDir=$PWD
 	while [[ $PWD != / ]] ; do
@@ -157,7 +162,7 @@ function sh256chk {
 
 #tar the contents of the pwd
 function tarpwd { 
-	tar -czvf $(fname $(pwd)).tar.gz $(pwd)
+	tar -czvf $(fname $(pwd)).tar.gz .
 }
 
 function greph {
@@ -183,40 +188,41 @@ function showme {
 	cat $path | head -$end | tail -$len
 }
 
-###USER NOTES - USEFUL COMMANDS
- ##commands in succession
+####USER NOTES - USEFUL COMMANDS
+ ###COMMANDS IN SUCCESSION
   #run b iff a is sucessful
    #$a && b
   #run b even if a fails
    #$a;b
   #run b if a never even finishes
    #$a & b
- ##Add user to a group
-  #gpasswd -a <username> <groupname>
- ##Get OS version
-  #lsb_release -a
- ##Netcat send
-  #nc <ip> <port> < <filename>
- ##Netcat receive
-  #nc -l <port> > <filename>
- ##Netcat a whole directory
-  #tar cfvz - <directory> | nc <ip> <port>
- ##Get sizeof a file/directory
-  #du -sh <filename>
- ##untar a .gz file
-  #tar -xvzf
- ##ifttt triggers
-  #curl -X POST https://maker.ifttt.com/trigger/<event>/with/key/ceyFl30ngD4ES9fFogAKfl
- ##set var to result of cmd
-  #dir=`cat sometextfile.txt`
- ##xargs
- #By default xargs reads items from standard input as separated by blanks and executes a command once for each argument.
-  #e.g.
-   # echo 'one two three' | xargs mkdir
-    # will execute: 
-     # $mkdir one 
-     # $mkdir two
-     # $mkdir three
+
+ ###MISC
+  ##Add user to a group
+   #gpasswd -a <username> <groupname>
+  ##Get OS version
+   #lsb_release -a
+  ##Netcat send
+   #nc <ip> <port> < <filename>
+  ##Netcat receive
+   #nc -l <port> > <filename>
+  ##Netcat a whole directory
+   #tar cfvz - <directory> | nc <ip> <port>
+  ##Get sizeof a file/directory
+   #du -sh <filename>
+  ##untar a .gz file
+   #tar -xvzf
+  ##ifttt triggers
+   #curl -X POST https://maker.ifttt.com/trigger/<event>/with/key/ceyFl30ngD4ES9fFogAKfl
+  ##set var to result of cmd
+   #dir=`cat sometextfile.txt`
+  ##xargs
+    #By default xargs reads items from standard input as separated by blanks and executes a command once for each argument.
+     #echo 'one two three' | xargs mkdir
+    #will execute: 
+     #$mkdir one 
+     #$mkdir two
+     #$mkdir three
  ##grep for multiple strings at once
   #$grep -E 'file1|file2|file3'
  ##to add line numbers to vim, add this line to ~/.vimrc
@@ -226,28 +232,38 @@ function showme {
  ##change date
   #e.g. to 3:14am on dec 7 1992
    #$date 1207031492
- ##string manipulation
-  #remove everything after & including last matching substring
-   #${string%substring*}
-    #e.g foo="letter" && echo ${foo%t*}
-     #will print "let"
-  #remove everything after & including first matching substring
-   #${string%%substring*}
-    #e.g foo="letter" && echo ${foo%%t*}
-     #will print "le"
-  #remove everything before & including first matching substring
-   #${string#*substring}
-    #e.g foo="letter" && echo ${foo#*t}
-     #will print "ter"
-  #remove everything before & including last matching substring
-   #${string##*substring}
-    #e.g foo="letter" && echo ${foo##*t}
-     #will print "le"
-  #manipulate string after a pipe
-   #echo letter | (read x; echo ${x%t*})
-    #will print "let"
- ##git
-  #show all currently tracked files
-   #git ls-tree -r master --name-only
 
+ ###STRING MANIPULATION
+  ##remove everything after & including last matching substring
+   #${string%substring*}
+   #e.g foo="letter" && echo ${foo%t*}
+   #will print "let"
+  ##remove everything after & including first matching substring
+   #${string%%substring*}
+   #e.g foo="letter" && echo ${foo%%t*}
+   #will print "le"
+  ##remove everything before & including first matching substring
+   #${string#*substring}
+   #e.g foo="letter" && echo ${foo#*t}
+   #will print "ter"
+  ##remove everything before & including last matching substring
+   #${string##*substring}
+   #e.g foo="letter" && echo ${foo##*t}
+   #will print "le"
+  ##manipulate string after a pipe
+   #echo letter | (read x; echo ${x%t*})
+   #will print "let"
+
+ ###GIT
+  ##show all currently tracked files
+   #git ls-tree -r master --name-only
+  ##This will destroy any local modifications - Don't do it if you have uncommitted work you want to keep.
+   #git reset --hard 0d1d7fc32
+  ##Alternatively, if there's work to keep:
+   #git stash
+   #git reset --hard 0d1d7fc32
+   #git stash pop
+   ##This saves the modifications, then reapplies that patch after resetting.
+   ##You could get merge conflicts, if you've modified things which were
+   ##changed since the commit you reset to.
 

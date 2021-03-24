@@ -52,6 +52,8 @@ alias loge="echo 'LOG_ERROR(\"%s():\", __FUNCTION__);'"
 alias pi="echo '10.74.148.212'"
 alias apush="eth2_on && sleep 10 && adb connect 192.168.1.105:5555 && adb root && adb push /home/oakeada/amnt/esncmd /data/mine && eth2_off"
 alias make_jar="cd /home/oakeada/ATV/android-q-10/vendor/dish/apps/sgsLite/atv_utils/build/intermediates/javac/debug/classes && jar -cf utils.jar com/dish/atv/* && cp utils.jar /home/oakeada/ATV/android-q-10/vendor/dish/apks/DeviceManager/DeviceMgr.RemoteSvc.NDrain/app/src/main/libs/com.dish.atv/utils.jar && cd -"
+
+alias mlunch="source ~/ATV/android-q-10/build/make/envsetup.sh && lunch 2"
 ##FUNCTIONS
 
 function toggle {
