@@ -9,7 +9,7 @@ alias uprc="source /home/$USER/.bashrc"
 alias catrc="cat /home/$USER/.conf/.aliases"
 
 ##SHORTENERS
-alias ls="ls+"
+alias ls="lsd"
 alias ll="ls -al"
 alias l="ls -l"
 alias lh="ls -a"
