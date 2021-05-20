@@ -1,7 +1,11 @@
 HISTSIZE=20000
 HISTFILESIZE=20000
 
-source /home/$USER/.conf/.local_aliases
+source /Users/$USER/.conf/.local_aliases
+
+function ls {
+    lsd $1 || ls $1
+}
 
 ##META
 alias vimrc="vim /home/$USER/.conf/.aliases"
@@ -9,7 +13,6 @@ alias uprc="source /home/$USER/.bashrc"
 alias catrc="cat /home/$USER/.conf/.aliases"
 
 ##SHORTENERS
-alias ls="lsd"
 alias ll="ls -al"
 alias l="ls -l"
 alias lh="ls -a"
