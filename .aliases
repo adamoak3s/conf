@@ -2,6 +2,7 @@ HISTSIZE=20000
 HISTFILESIZE=20000
 
 source /home/$USER/.conf/.local_aliases
+neofetch
 
 ##META
 alias vimrc="vim /home/$USER/.conf/.aliases"

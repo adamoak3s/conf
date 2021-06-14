@@ -4,6 +4,7 @@ alias vimsrc="vim /home/oakeada/.conf/.suse_aliases"
 ##SCRIPTS & BINARIES
 alias vscode="/home/oakeada/bin/VSCode-linux-x64/bin/code"
 alias adb="/home/oakeada/bin/adb"
+alias neofetch="/home/oakeada/bin/neofetch"
 
 ##CLEARCASE CMDS
 alias cdv="cd /home/oakeada/views; l"
