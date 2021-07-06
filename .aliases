@@ -1,11 +1,7 @@
 HISTSIZE=20000
 HISTFILESIZE=20000
 
-source /Users/$USER/.conf/.local_aliases
-
-function ls {
-    lsd $1 || ls $1
-}
+source /home/$USER/.conf/.local_aliases
 
 ##META
 alias vimrc="vim /home/$USER/.conf/.aliases"
@@ -13,9 +9,9 @@ alias uprc="source /home/$USER/.bashrc"
 alias catrc="cat /home/$USER/.conf/.aliases"
 
 ##SHORTENERS
-alias ll="ls -al"
-alias l="ls -l"
-alias lh="ls -a"
+alias ll="lsd -al"
+alias l="lsd -l"
+alias lh="lsd -a"
 alias lll="readlink -f"
 
 alias c="clear"
@@ -127,7 +123,7 @@ function hide {
 function unhide {
 	for var in $@
 		do
-			mv $var ${var%.*}
+			cp $var.hidden $var
 		done
 }
 

@@ -4,6 +4,7 @@ alias vimsrc="vim /home/oakeada/.conf/.suse_aliases"
 ##SCRIPTS & BINARIES
 alias vscode="/home/oakeada/bin/VSCode-linux-x64/bin/code"
 alias adb="/home/oakeada/bin/adb"
+alias neofetch="/home/oakeada/bin/neofetch"
 
 ##CLEARCASE CMDS
 alias cdv="cd /home/oakeada/views; l"
@@ -14,19 +15,20 @@ alias setcs="ct setcs"
 alias lsco="ct lsco -r -me -cview"
 alias lscos="ct lsco -r -me -cview -short"
 
-#jamming references
+# references
 alias jamr_pizza_util="echo 'boot -noclose -elf -bsu flash0.bsu && ifconfig eth2 -auto && android fastboot -device=flash0 -transport=tcp' && echo '$(tput setab 1)run ^THIS^ cmd in BOLT & then run vTHISv cmd here$(tput sgr 0)' && echo '/home/oakeada/c_files/androidtv/scripts/update_joey4.sh 192.168.1.105 && eth2_off'"
 alias jamr_hopper="echo '$(tput setab 3) mount -t nfs -o soft,nolock 192.168.1.1:/home/oakeada/mnt/ /mnt/mine$(tput sgr 0)'"
-alias jamr_snap="echo 'boot -raw -addr=0x42000000 -bsu flash0.bsu && ifconfig eth1 -auto && android fastboot -device=flash0 -transport=tcp' && echo '$(tput setab 1)run ^THIS^ cmd in BOLT & then run vTHISv cmd here$(tput sgr 0)' && echo 'update_snap'"
-alias jamr_mj4="echo 'boot -raw -addr=0x42000000 -bsu flash0.bsu && ifconfig eth2 -auto && android fastboot -device=flash0 -transport=tcp' && echo '$(tput setab 1)run ^THIS^ cmd in BOLT & then run vTHISv cmd in img dir$(tput sgr 0)' && echo 'jam_mj4'"
-alias jamr_wj4="echo 'boot -raw -noclose -bsu -addr=0x42000000 -max=0x20000 flash0.bsu && ifconfig eth1 -auto && android fastboot -device=flash0 -transport=tcp'  && echo '$(tput setab 1)run ^THIS^ cmd in BOLT & then run vTHISv cmd in img dir$(tput sgr 0)' && echo 'update_wj4'"
+alias jamr_snap="echo 'ifconfig eth0 -auto && boot -raw -noclose -bsu -addr=0x42000000 -max=0x100000 flash0.bsu_a && android fastboot -transport=tcp -device=flash0' && echo '$(tput setab 1)run ^THIS^ cmd in BOLT & then run vTHISv cmd here$(tput sgr 0)' && echo 'jam_snap'"
+alias jamr_mj4="echo 'boot -raw -noclose -bsu -addr=0x42000000 -max=0x100000 flash0.bsu_a && ifconfig eth2 -auto && android fastboot -device=flash0 -transport=tcp' && echo '$(tput setab 1)run ^THIS^ cmd in BOLT & then run vTHISv cmd in img dir$(tput sgr 0)' && echo 'jam_mj4'"
+alias jamr_wj4="echo 'boot -raw -noclose -bsu -addr=0x42000000 -max=0x100000 flash0.bsu_a && ifconfig eth1 -auto && android fastboot -device=flash0 -transport=tcp'  && echo '$(tput setab 1)run ^THIS^ cmd in BOLT & then run vTHISv cmd in img dir$(tput sgr 0)' && echo 'jam_wj4'"
 
 alias dmjar="echo '/home/oakeada/ATV/android-q-10/vendor/dish/apks/DeviceManager/DeviceMgr.RemoteSvc.NDrain/app/src/main/libs/utils.jar'"
 
 alias selinuxr="echo 'allow scontext tcontext:tclass { permission }'"
 
+alias hopinfo="echo 'RID: R1911703129-35 -- SCID: S1967502974-75'"
 #frequent dirs
-alias aroot="cd ~/ATV/android-q-10"
+alias aroot="cd ~/ATV"
 alias sepolicy="cd /home/oakeada/ATV/android-q-10/device/broadcom/inuvik/dish_selinux_policy"
 alias aout="cd /home/oakeada/ATV/android-q-10/out/target/product"
 alias stories="cd ~/stories; l"
@@ -48,61 +50,65 @@ alias reboot_suse="suse_off && sleep 15 && suse_on"
 #misc
 alias shhatv="echo 'echo 3 >  /proc/sysrq-trigger'"
 alias adbc="adb connect 192.168.1.105:5555 && adb root"
-alias loge="echo 'LOG_ERROR(\"%s():\", __FUNCTION__);'"
+alias loge="echo 'LOG_ERROR(\"%s():adam - \", __FUNCTION__);'"
 alias pi="echo '10.74.148.212'"
 alias apush="eth2_on && sleep 10 && adb connect 192.168.1.105:5555 && adb root && adb push /home/oakeada/amnt/esncmd /data/mine && eth2_off"
 alias make_jar="cd /home/oakeada/ATV/android-q-10/vendor/dish/apps/sgsLite/atv_utils/build/intermediates/javac/debug/classes && jar -cf utils.jar com/dish/atv/* && cp utils.jar /home/oakeada/ATV/android-q-10/vendor/dish/apks/DeviceManager/DeviceMgr.RemoteSvc.NDrain/app/src/main/libs/com.dish.atv/utils.jar && cd -"
-
-alias mlunch="source ~/ATV/android-q-10/build/make/envsetup.sh && lunch 2"
+alias mlunch="source ~/ATV/android-q-10/build/make/envsetup.sh && lunch"
 ##FUNCTIONS
 
 function toggle {
 	_toggle "$1_$2"
-	echo -e
+		echo -e
 }
 
 function _toggle {
 	curl -X POST "http://maker.ifttt.com/trigger/$1/with/key/ceyFl30ngD4ES9fFogAKfl"
-	echo -e
+		echo -e
 }
 
 #Clearcase functions
+function atvclean {
+	dir=$PWD
+		goto netra && make clean && goto net_dev_mgr && make clean && goto net_con_mgr && make clean && goto escore && make clean && cd $dir
+}
+
 function fmerge {
 	if [ "$#" -ne 1 ]; then
 		echo 'Please provide merge-from-branch'
 	else	
 		ct findmerge . -fver $1 -qal -gmerge
-	fi
+			fi
 }
 
 function eclipse {
 	fullpath=$(readlink -f $1)
-	#remove the first /
-	path1=${fullpath#*/}
-	#remove 'view/'
+#remove the first /
+		path1=${fullpath#*/}
+#remove 'view/'
 	path2=${path1#*/}
-	# remove '<viewname>/'
+# remove '<viewname>/'
 	path=${path2#*/}
 	eclipse_string="element /$path -none"
 
-	cp $1 $1.keep
+		cp $1 $1.keep
 
-	config_spec="/home/oakeada/config_specs/$(ls_tag).cs"
-	echo $eclipse_string > $config_spec
-	catcs >> $config_spec
-	setcs $config_spec
+		config_spec="/home/oakeada/config_specs/$(ls_tag).cs"
+		echo $eclipse_string > $config_spec
+		catcs >> $config_spec
+		setcs $config_spec
 
-	mv $1.keep $1
-	chmod 777 $1
+		mv $1.keep $1
+		chmod 777 $1
 }
 
 function edcs {
 	config_spec="/home/oakeada/config_specs/$(ls_tag).cs"
-	vim $config_spec && setcs $config_spec	
+		vim $config_spec && setcs $config_spec	
 }
 
 function cia {
-	 ct ci -c "$1" $(lscos)
+	ct ci -c "$1" $(lscos)
 }
 
 
@@ -161,27 +167,97 @@ function run_instrument {
 
 function afind {
 	aroot && lll $(find . -iname $1) 2>/dev/null
-	cd - >/dev/null
+		cd - >/dev/null
+}
+
+function cleanDM {
+	if [ "$#" -ne 1 ]; then
+		echo 'Please provide view name'
+	else	
+		rm -rf /home/oakeada/ATV/$1/android-q-10/out/soong/.glob/vendor/dish/apks/DeviceManager/DeviceMgr_RemoteSvc_NDrain
+			rm -rf /home/oakeada/ATV/$1/android-q-10/out/soong/.glob/vendor/dish/apks/DeviceManager/DeviceMgr_RemoteSvc_NDrain
+			fi
+}
+
+function build_atv {
+	make -j$1 -C /vobs/build $2DevRelease ATV_SYNC_SPEED=true ATV_SYNC_JOBS=12 ATV_PER_VIEW=true APKS_BUNDLE_ID=AAA100 SWID=ADAM BUILD_NUMBER=00 LOCAL_GOOGLE_CLIENT_ID_BASE=an    droid-dish-tv ANDROID_SUPPORTS_MEDIACAS=y VERBOSE=true
+}
+
+function buildAll {
+	atvclean
+	build_atv 12 ATVWJ4 || build_atv 1 ATVWJ4
+	atvclean
+	build_atv 12 ATVMJ4 || build_atv 1 ATVMJ4
+	atvclean
+	build_atv 12 SNAP2 || build_atv 1 ATVMJ4
+}
+
+function copyAll {
+	if [ "$#" -ne 1 ]; then
+		echo 'Please provide jira id'
+	else	
+		mkdir /home/oakeada/stories/$1
+		mkdir /home/oakeada/stories/$1/mj4
+		mkdir /home/oakeada/stories/$1/wj4
+		mkdir /home/oakeada/stories/$1/snap2
+	
+		cp ./ATVMJ4/*.img /home/oakeada/stories/$1/mj4 && echo 'successfully copied mj4 images'
+		cp ./ATVWJ4/*.img /home/oakeada/stories/$1/wj4 && echo 'successfully copied wj4 images'
+		cp ./SNAP2/*.img /home/oakeada/stories/$1/snap2 && echo 'successfully copied snap2 images'
+	fi
 }
 
 #STB jammers
+function jam_wj4 {
+	my_fastboot 192.168.1.116 ATVWJ4
+}
+
 function jam_mj4 {
-	my_fastboot 192.168.1.104
+	my_fastboot 192.168.1.104 ATVMJ4
+}
+
+function jam_snap {
+	my_fastboot 192.168.1.113 SNAP2
+}
+
+
+function djam_wj4 {
+	my_fastboot_d 192.168.1.116 ATVWJ4
+}
+
+function djam_mj4 {
+	my_fastboot_d 192.168.1.104 ATVMJ4
+}
+
+function djam_snap {
+	my_fastboot_d 192.168.1.113 SNAP2
 }
 
 function my_fastboot {
-		dir=$PWD
-		echo flashing from images in $dir
-		FASTBOOT_DIR=~/bin
-		IP_ADDR=$1
+	echo "flashing from images in $PWD"
+		CMD="/home/oakeada/bin/fastboot -s tcp:$1"
 
-		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR set_active a
-		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR erase misc
-		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash boot $dir/boot.img
-		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash userdata $dir/userdata.img
-		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash vbmeta $dir/vbmeta.img
-		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash super $dir/super.img
-		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash dtbo $dir/dtbo.ATVMJ4.img
-		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR reboot
+		$CMD erase misc
+		$CMD set_active a
+		$CMD flash boot boot.img
+		$CMD flash cache cache.img
+		$CMD flash dtbo dtbo.$2.img
+		$CMD flash --disable-verification vbmeta vbmeta.img
+		$CMD flash super super.img
+		$CMD reboot
 }
 
+function my_fastboot_d {
+	echo "flashing from images in $PWD"
+		CMD="/home/oakeada/bin/fastboot -s tcp:$1"
+
+		$CMD erase misc
+		$CMD set_active a
+		$CMD flash boot boot.img
+		$CMD flash cache cache.img
+		$CMD flash dtbo dtbo.$2.img
+		$CMD flash vbmeta vbmeta.img
+		$CMD flash --disable-verification userdata userdata.img
+		$CMD flash super super.img
+		$CMD reboot
+}

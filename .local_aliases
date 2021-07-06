@@ -5,3 +5,4 @@ LOCAL_ALIASES=
 
 #do not modify this
 source /home/$USER/.conf/$LOCAL_ALIASES
+alias vimlrc="vim $LOCAL_ALIASES"
