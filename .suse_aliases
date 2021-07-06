@@ -179,13 +179,17 @@ function cleanDM {
 			fi
 }
 
+function build_atv {
+	make -j$1 -C /vobs/build $2DevRelease ATV_SYNC_SPEED=true ATV_SYNC_JOBS=12 ATV_PER_VIEW=true APKS_BUNDLE_ID=AAA100 SWID=ADAM BUILD_NUMBER=00 LOCAL_GOOGLE_CLIENT_ID_BASE=an    droid-dish-tv ANDROID_SUPPORTS_MEDIACAS=y VERBOSE=true
+}
+
 function buildAll {
 	atvclean
-	make -j12 -C /vobs/build ATVMJ4DevRelease ATV_SYNC_SPEED=true ATV_SYNC_JOBS=12 ATV_PER_VIEW=true APKS_BUNDLE_ID=AAA100 SWID=ADAM BUILD_NUMBER=00 LOCAL_GOOGLE_CLIENT_ID_BASE=android-dish-tv ANDROID_SUPPORTS_MEDIACAS=y VERBOSE=true
+	build_atv 12 ATVWJ4 || build_atv 1 ATVWJ4
 	atvclean
-	make -j12 -C /vobs/build SNAP2DevRelease ATV_SYNC_SPEED=true ATV_SYNC_JOBS=12 ATV_PER_VIEW=true APKS_BUNDLE_ID=AAA100 SWID=ADAM BUILD_NUMBER=00 LOCAL_GOOGLE_CLIENT_ID_BASE=android-dish-tv ANDROID_SUPPORTS_MEDIACAS=y VERBOSE=true
+	build_atv 12 ATVMJ4 || build_atv 1 ATVMJ4
 	atvclean
-	make -j12 -C /vobs/build ATVWJ4DevRelease ATV_SYNC_SPEED=true ATV_SYNC_JOBS=12 ATV_PER_VIEW=true APKS_BUNDLE_ID=AAA100 SWID=ADAM BUILD_NUMBER=00 LOCAL_GOOGLE_CLIENT_ID_BASE=android-dish-tv ANDROID_SUPPORTS_MEDIACAS=y VERBOSE=true
+	build_atv 12 SNAP2 || build_atv 1 ATVMJ4
 }
 
 function copyAll {
@@ -216,6 +220,19 @@ function jam_snap {
 	my_fastboot 192.168.1.113 SNAP2
 }
 
+
+function djam_wj4 {
+	my_fastboot_d 192.168.1.116 ATVWJ4
+}
+
+function djam_mj4 {
+	my_fastboot_d 192.168.1.104 ATVMJ4
+}
+
+function djam_snap {
+	my_fastboot_d 192.168.1.113 SNAP2
+}
+
 function my_fastboot {
 	echo "flashing from images in $PWD"
 		CMD="/home/oakeada/bin/fastboot -s tcp:$1"
@@ -225,8 +242,22 @@ function my_fastboot {
 		$CMD flash boot boot.img
 		$CMD flash cache cache.img
 		$CMD flash dtbo dtbo.$2.img
+		$CMD flash --disable-verification vbmeta vbmeta.img
+		$CMD flash super super.img
+		$CMD reboot
+}
+
+function my_fastboot_d {
+	echo "flashing from images in $PWD"
+		CMD="/home/oakeada/bin/fastboot -s tcp:$1"
+
+		$CMD erase misc
+		$CMD set_active a
+		$CMD flash boot boot.img
+		$CMD flash cache cache.img
+		$CMD flash dtbo dtbo.$2.img
 		$CMD flash vbmeta vbmeta.img
-		$CMD flash userdata userdata.img
+		$CMD flash --disable-verification userdata userdata.img
 		$CMD flash super super.img
 		$CMD reboot
 }
