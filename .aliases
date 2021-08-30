@@ -13,6 +13,7 @@ alias ll="lsd -al"
 alias l="lsd -l"
 alias lh="lsd -a"
 alias lll="readlink -f"
+alias lgz="l | grep gz"
 
 alias c="clear"
 alias x="exit"
@@ -58,14 +59,28 @@ alias munt="mount"
 alias moun="mount"
 
 ##FUNCTIONS
+function gitm {
+	git fetch && git checkout remotes/origin/master
+}
+
+function gitf {
+	git fetch && git branch -a | grep $1
+}
+
+function gitco {
+	git checkout --track $1
+}
+
+function edit {
+	gedit $1 & >/dev/null
+}
+
 function catn {
 	cat -n $1 | grep $2
 }
 
-
 function mdate {
-	foo="Valheim-`date +%F`"
-	cp -r /home/oakeada/testy /home/oakeada/$foo
+	echo "`date +%F`"
 }
 
 function upfind {
