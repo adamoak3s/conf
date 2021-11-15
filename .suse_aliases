@@ -210,9 +210,9 @@ function buildAll {
 	atvclean
 	build ATVWJ4 12 || build ATVWJ4 1
 	atvclean
-	build ATVMJ4 12 || build ATVMJ4 1
-	atvclean
 	build SNAP2 12 || build SNAP2 1
+	atvclean
+	build ATVMJ4 12 || build ATVMJ4 1
 }
 
 function copyAll {
@@ -231,14 +231,13 @@ function copyAll {
 }
 
 function copyImages {
-	if [ "$#" -ne 1 ]; then
-		echo 'Please provide jira id'
+	if [ "$#" -ne 2 ]; then
+		echo 'Please provide jira id & boardtype'
 	else	
-		dir=/ccshare/linux/c_files/oakeada/stories/$1
-		mkdir $dir
-		mkdir $dir/images
+		dir=/ccshare/linux/c_files/oakeada/stories/$1/$2
+		mkdir -p $dir
 	
-		cp *.img $dir/images && echo "successfully copied images to $dir/images"
+		cp *.img $dir && echo "successfully copied images to $dir"
 	fi
 }
 
@@ -252,7 +251,7 @@ function jam_mj4 {
 }
 
 function jam_snap {
-	my_fastboot 192.168.1.113 SNAP2
+	my_fastboot 192.168.1.114 SNAP2
 }
 
 
@@ -296,3 +295,22 @@ function my_fastboot_d {
 		$CMD flash super super.img
 		$CMD reboot
 }
+
+##MISC
+#function atve {	
+#	if [ "$#" -ne 1 ]; then
+#		echo 'Please provide tarball'
+#	else
+#		TARBALL=$1	
+#		BASELINE=${TARBALL%%.*}
+#		echo $BASELINE
+#		DIRECTORY=~/stuff/$BASELINE
+#		mkdir $DIRECTORY && echo "created $DIRECTORY" \
+#		&& cp $1 $DIRECTORY/ && echo 'copied tarball' \
+#		cd $DIRECTORY && tar xzvf $1 && l
+#	fi
+#}
+
+###NOTES
+##Update frameworks.jar
+#S=ATVWJ4 make framework && cp ./out/soong/.intermediates/frameworks/base/framework/android_common/jarjar/framework.jar <destination>
