@@ -202,17 +202,29 @@ function atvclean {
 		goto netra && make clean && goto net_dev_mgr && make clean && goto net_con_mgr && make clean && goto escore && make clean && cd $dir
 }
 
+function _build {
+	make -j$1 -C /vobs/build $2DevRelease ATV_SYNC_SPEED=true ATV_SYNC_JOBS=12 ATV_PER_VIEW=true APKS_BUNDLE_ID=OAKES1 SWID=ADAM BUILD_NUMBER=00 LOCAL_GOOGLE_CLIENT_ID_BASE=android-dish-tv ANDROID_SUPPORTS_MEDIACAS=y VERBOSE=true $3
+}
+
 function build {
-	make -j$2 -C /vobs/build $1DevRelease ATV_SYNC_SPEED=true ATV_SYNC_JOBS=12 ATV_PER_VIEW=true APKS_BUNDLE_ID=OAKES1 SWID=ADAM BUILD_NUMBER=00 LOCAL_GOOGLE_CLIENT_ID_BASE=an    droid-dish-tv ANDROID_SUPPORTS_MEDIACAS=y VERBOSE=true
+	if [ "$#" -e 0 ]; then
+		echo 'Usage: build <board name> [extra build switches]'
+		echo 'e.g:'
+		echo -e
+		echo '    build ATVMJ4'
+		echo -e
+		echo '    build ATVMJ4 ATV_MANIFEST_BRANCH=oakeada-AFA1'				
+	fi
+		_build 12 $1 $2 || _build 1 $1 $2
 }
 
 function buildAll {
 	atvclean
-	build ATVWJ4 12 || build ATVWJ4 1
+	build ATVWJ4
 	atvclean
-	build SNAP2 12 || build SNAP2 1
+	build SNAP2
 	atvclean
-	build ATVMJ4 12 || build ATVMJ4 1
+	build ATVMJ4
 }
 
 function copyAll {
