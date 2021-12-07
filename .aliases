@@ -9,10 +9,12 @@ alias uprc="source /home/$USER/.bashrc"
 alias catrc="cat /home/$USER/.conf/.aliases"
 
 ##SHORTENERS
-#alias ls="`echo ~/bin/lsd || which ls`"
+function my_ls {
+	lsd "$@" || ls "$@" 
+}
 
-alias l="lsd -l"
-alias lh="lsd -a"
+alias l="my_ls -l"
+alias lh="my_ls -a"
 
 alias ll="l -a"
 alias ltr="l -tr"
