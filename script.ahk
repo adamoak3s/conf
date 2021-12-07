@@ -7,7 +7,8 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
-; ## THE FOLLOWING BINDINGS MIMIC THE FN-LAYER OF A DUCKY MK ##
+AppsKey & a::SendInput {Blind}{ CapsLock }
+
 AppsKey & i::SendInput {Blind}{ Up }
 AppsKey & j::SendInput {Blind}{ Left }
 AppsKey & k::SendInput {Blind}{ Down }
@@ -19,49 +20,97 @@ AppsKey & `;::SendInput {Blind}{ PgDn }
 AppsKey & [::SendInput {Blind}{ Home }
 AppsKey & '::SendInput {Blind}{ End }
 
-AppsKey & 1::SendInput {Blind}{ F1 }
-AppsKey & 2::SendInput {Blind}{ F2 }
-AppsKey & 3::SendInput {Blind}{ F3 }
-AppsKey & 4::SendInput {Blind}{ F4 }
-AppsKey & 5::SendInput {Blind}{ F5 }
-AppsKey & 6::SendInput {Blind}{ F6 }
-AppsKey & 7::SendInput {Blind}{ F7 }
-AppsKey & 8::SendInput {Blind}{ F8 }
-AppsKey & 9::SendInput {Blind}{ F9 }
-AppsKey & 0::SendInput {Blind}{ F10 }
-AppsKey & -::SendInput {Blind}{ F11 }
-AppsKey & =::SendInput {Blind}{ F12 }
-
-AppsKey & ,::SendInput {Volume_Down 1}
-AppsKey & .::SendInput {Volume_Up 1}
-AppsKey & m::SendInput {Volume_Mute }
-
-; ####################################################
-
-AppsKey & a::SendInput {Blind}{ CapsLock }
+AppsKey & y::SendInput {Blind}{ Insert }
 
 AppsKey & u::SendInput {Blind}{ Backspace }
+AppsKey & Backspace::SendInput {Blind}{ Del }
 
 AppsKey & x::SendInput {Blind}^{ x }
 AppsKey & c::SendInput {Blind}^{ c }
+AppsKey & z::SendInput {Blind}^{ z }
 AppsKey & v::SendInput {Blind}^{ v }
+AppsKey & r::SendInput {Blind}^{ r }
+AppsKey & f::SendInput {Blind}^{ f }
 
 ; tmux prefix
 AppsKey & Space::SendInput {Blind}^{ b }
+; tmux select
+AppsKey & e::SendInput {Blind}^{ Space }
+; tmux write
+AppsKey & w::SendInput {Blind}^{ w }
 
 ; macros
-AppsKey & q::
+AppsKey & 1::
 {
    Send, fuckdish
    SendInput { ! }
-   send, 1
+   send, 2
    send {Enter}
    return
 }
 
-AppsKey & w::
+AppsKey & 2::
+{
+   Send, 5$
+   SendInput { # }
+   Send, N2csh
+   send {Enter}
+   return
+}
+
+AppsKey & 3::
 {
    Send, echo 3 > /proc/sysrq-trigger
    send {Enter}
    return
 }
+
+AppsKey & 4::
+{
+   Send, logcat | grep -i ntpproxy
+   send {Enter}
+   return
+}
+
+AppsKey & 5::
+{
+   Send, logcat | grep -i devicemgr
+   send {Enter}
+   return
+}
+
+AppsKey & 6::
+{
+   Send, logcat | grep -i adam
+   send {Enter}
+   return
+}
+
+AppsKey & 7::
+{
+   Send, ps -ef | grep com.dish
+   send {Enter}
+   return
+}
+
+AppsKey & 8::
+{
+   Send,logcat | grep -i stb_validate
+   send {Enter}
+   return
+}
+
+#maxThreadsPerHotkey, 2
+setKeyDelay, 50, 50
+setMouseDelay, 50
+banana:=0
+
+AppsKey & 9::
+	banana:=!banana
+	
+	while (banana=1)
+	{
+		SendInput {Blind}^{ c }
+		sleep, 100
+	}
+return

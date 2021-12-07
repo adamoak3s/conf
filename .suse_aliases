@@ -174,7 +174,25 @@ function kmine {
 				done
 }
 
-#Android functions
+#MISC ANDROID
+function keyevent {
+	echo 'alias e="input keyevent 23" && \
+alias s="input keyevent 20" && \
+alias a="input keyevent 21" && \
+alias d="input keyevent 22" && \
+alias w="input keyevent 19" && \
+alias 0="input keyevent 7" && \
+alias 1="input keyevent 8" && \
+alias 2="input keyevent 9" && \
+alias 3="input keyevent 10" && \
+alias 4="input keyevent 11" && \
+alias 5="input keyevent 12" && \
+alias 6="input keyevent 13" && \
+alias 7="input keyevent 14" && \
+alias 8="input keyevent 15" && \
+alias q="input keyevent 4"'
+}
+
 function run_instrument {
 	adb shell am instrument -r -w $1
 }
@@ -197,6 +215,7 @@ function pwdd {
 	echo /ccshare/linux/c_files/oakeada/stories/$1
 }
 
+#ANDROID IMAGE CREATION
 function atvclean {
 	dir=$PWD
 		goto netra && make clean && goto net_dev_mgr && make clean && goto net_con_mgr && make clean && goto escore && make clean && cd $dir
@@ -207,34 +226,54 @@ function _build {
 }
 
 function build {
-	if [ "$#" -e 0 ]; then
-		echo 'Usage: build <board name> [extra build switches]'
-		echo 'e.g:'
-		echo -e
-		echo '    build ATVMJ4'
-		echo -e
-		echo '    build ATVMJ4 ATV_MANIFEST_BRANCH=oakeada-AFA1'				
+	if [ "$1" = "-s" ]; then
+		if [ "$#" -eq 0 ]; then
+			echo 'Usage: build -s <board name> [extra build switches]'
+			echo 'e.g:'
+			echo -e
+			echo '    build ATVMJ4'
+			echo -e
+			echo '    build ATVMJ4 ATV_MANIFEST_BRANCH=oakeada-AFA1'
+		else
+			_build 12 $1 $2 || _build 1 $1 $2
+		fi
+	elif [ "$1" = "-a" ]; then
+	        if ! adb root > /dev/null; then   
+		        echo "Please run adb connect to use atest"	
+		else
+			APK_FILE=$(find . -name *.apk)
+			if [ "$APK_FILE" = "" ]; then 
+				echo "Could not find apk file!"
+			else
+				make dev && echo "Successfully built app" && adb install $APK_FILE && echo "Successfully Installed app" && adb shell reboot
+			fi	
+		fi
+	else 
+			echo 'Usage: build <mode> [options]'
+			echo -e
+			echo '	-s		Builds a full system image'
+			echo '	-a		Builds & Installs application apk'
+			echo -e
 	fi
-		_build 12 $1 $2 || _build 1 $1 $2
 }
 
 function buildAll {
 	atvclean
-	build ATVWJ4
+	build -s ATVWJ4 $1
 	atvclean
-	build SNAP2
+	build -s SNAP2 $1 
 	atvclean
-	build ATVMJ4
+	build -s ATVMJ4 $1
 }
 
 function copyAll {
 	if [ "$#" -ne 1 ]; then
 		echo 'Please provide jira id'
 	else	
-		mkdir /home/oakeada/stories/$1
-		mkdir /home/oakeada/stories/$1/mj4
-		mkdir /home/oakeada/stories/$1/wj4
-		mkdir /home/oakeada/stories/$1/snap2
+		mkdir /home/oakeada/stories/$1 2>/dev/null
+		mkdir /home/oakeada/stories/$1/mj4 2>/dev/null
+		mkdir /home/oakeada/stories/$1/wj4 2>/dev/null
+		mkdir /home/oakeada/stories/$1/snap2 2>/dev/null
 	
 		cp ./ATVMJ4/*.img /home/oakeada/stories/$1/mj4 && echo 'successfully copied mj4 images'
 		cp ./ATVWJ4/*.img /home/oakeada/stories/$1/wj4 && echo 'successfully copied wj4 images'
@@ -244,7 +283,10 @@ function copyAll {
 
 function copyImages {
 	if [ "$#" -ne 2 ]; then
-		echo 'Please provide jira id & boardtype'
+		echo 'Usage: copyImages <jira id> <board name>'
+		echo 'e.g:'
+		echo -e
+		echo '			Builds a full system image'
 	else	
 		dir=/ccshare/linux/c_files/oakeada/stories/$1/$2
 		mkdir -p $dir
