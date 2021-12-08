@@ -16,16 +16,13 @@ alias lsco="ct lsco -r -me -cview"
 alias lscos="ct lsco -r -me -cview -short"
 
 # references
-alias jamr_pizza_util="echo 'boot -noclose -elf -bsu flash0.bsu && ifconfig eth2 -auto && android fastboot -device=flash0 -transport=tcp' && echo '$(tput setab 1)run ^THIS^ cmd in BOLT & then run vTHISv cmd here$(tput sgr 0)' && echo '/home/oakeada/c_files/androidtv/scripts/update_joey4.sh 192.168.1.105 && eth2_off'"
 alias jamr_hopper="echo '$(tput setab 3) mount -t nfs -o soft,nolock 192.168.1.1:/home/oakeada/mnt/ /mnt/mine$(tput sgr 0)'"
 alias jamr_snap="echo 'ifconfig eth0 -auto && boot -raw -noclose -bsu -addr=0x42000000 -max=0x100000 flash0.bsu_a && android fastboot -transport=tcp -device=flash0' && echo '$(tput setab 1)run ^THIS^ cmd in BOLT & then run vTHISv cmd here$(tput sgr 0)' && echo 'jam_snap'"
 alias jamr_mj4="echo 'boot -raw -noclose -bsu -addr=0x42000000 -max=0x100000 flash0.bsu_a && ifconfig eth2 -auto && android fastboot -device=flash0 -transport=tcp' && echo '$(tput setab 1)run ^THIS^ cmd in BOLT & then run vTHISv cmd in img dir$(tput sgr 0)' && echo 'jam_mj4'"
 alias jamr_wj4="echo 'boot -raw -noclose -bsu -addr=0x42000000 -max=0x100000 flash0.bsu_a && ifconfig eth1 -auto && android fastboot -device=flash0 -transport=tcp'  && echo '$(tput setab 1)run ^THIS^ cmd in BOLT & then run vTHISv cmd in img dir$(tput sgr 0)' && echo 'jam_wj4'"
 
 alias dmjar="echo '/home/oakeada/ATV/android-q-10/vendor/dish/apks/DeviceManager/DeviceMgr.RemoteSvc.NDrain/app/src/main/libs/utils.jar'"
-
 alias selinuxr="echo 'allow scontext tcontext:tclass { permission }'"
-
 alias hopinfo="echo 'RID: R1911703129-35 -- SCID: S1967502974-75'"
 
 #frequent dirs
@@ -151,15 +148,6 @@ function csd {
 	cd GOT-$1
 }
 
-function mksdir {
-	mkdir GOT-$1
-}
-
-function jamr_pizza {
-	eth2_on && jamr_pizza_util
-}
-
-
 function ktip {
 	for var in $@
 		do
@@ -171,7 +159,7 @@ function kmine {
 	for var in $@
 		do
 			mv $var $var.mine
-				done
+	done
 }
 
 #MISC ANDROID
@@ -207,8 +195,7 @@ function cleanDM {
 		echo 'Please provide view name'
 	else	
 		rm -rf /home/oakeada/ATV/$1/android-q-10/out/soong/.glob/vendor/dish/apks/DeviceManager/DeviceMgr_RemoteSvc_NDrain
-			rm -rf /home/oakeada/ATV/$1/android-q-10/out/soong/.glob/vendor/dish/apks/DeviceManager/DeviceMgr_RemoteSvc_NDrain
-			fi
+	fi
 }
 
 function pwdd {
@@ -220,38 +207,42 @@ function mkshrc {
 }
 
 #ANDROID IMAGE CREATION
-function atvclean {
-	dir=$PWD
-		goto netra && make clean && goto net_dev_mgr && make clean && goto net_con_mgr && make clean && goto escore && make clean && cd $dir
+function _full_build_cmd {
+	make -j$1 -C /vobs/build $2DevRelease ATV_SYNC_SPEED=true ATV_SYNC_JOBS=12 ATV_PER_VIEW=true APKS_BUNDLE_ID=OAKES1 SWID=ADAM BUILD_NUMBER=00 LOCAL_GOOGLE_CLIENT_ID_BASE=android-dish-tv ANDROID_SUPPORTS_MEDIACAS=y VERBOSE=true "${@:3}"
 }
 
-function _build {
-	make -j$1 -C /vobs/build $2DevRelease ATV_SYNC_SPEED=true ATV_SYNC_JOBS=12 ATV_PER_VIEW=true APKS_BUNDLE_ID=OAKES1 SWID=ADAM BUILD_NUMBER=00 LOCAL_GOOGLE_CLIENT_ID_BASE=android-dish-tv ANDROID_SUPPORTS_MEDIACAS=y VERBOSE=true $3
+
+function _full_build {
+	if [ "$#" -eq 1 ]; then
+		echo 'Usage: build <board name> [extra build switches]'
+		echo 'e.g:'
+		echo -e
+		echo '    build ATVMJ4'
+		echo -e
+		echo '    build ATVMJ4 ATV_MANIFEST_BRANCH=oakeada-AFA1'
+	else
+		_full_build_cmd 12 $@ || _full_build_cmd 1 $@
+	fi
+}
+
+function _app_build {
+        if ! adb root > /dev/null; then   
+	        echo "Please run adb connect"	
+	else
+		APK_FILE=$(find . -name *.apk)
+		if [ "$APK_FILE" = "" ]; then 
+			echo "Could not find apk file!"
+		else
+			make dev && echo "Successfully built app" && adb install $APK_FILE && echo "Successfully Installed app" && adb shell reboot
+		fi	
+	fi
 }
 
 function build {
 	if [ "$1" = "-f" ]; then
-		if [ "$#" -eq 1 ]; then
-			echo 'Usage: build -s <board name> [extra build switches]'
-			echo 'e.g:'
-			echo -e
-			echo '    build -f ATVMJ4'
-			echo -e
-			echo '    build -f ATVMJ4 ATV_MANIFEST_BRANCH=oakeada-AFA1'
-		else
-			_build 12 $2 $3 || _build 1 $2 $3
-		fi
+		_full_build "${@:2}"
 	elif [ "$1" = "-a" ]; then
-	        if ! adb root > /dev/null; then   
-		        echo "Please run adb connect"	
-		else
-			APK_FILE=$(find . -name *.apk)
-			if [ "$APK_FILE" = "" ]; then 
-				echo "Could not find apk file!"
-			else
-				make dev && echo "Successfully built app" && adb install $APK_FILE && echo "Successfully Installed app" && adb shell reboot
-			fi	
-		fi
+		_app_build "${@:2}"
 	else 
 			echo 'Usage: build <mode> [options]'
 			echo -e
@@ -261,36 +252,39 @@ function build {
 	fi
 }
 
-function buildAll {
-	atvclean
-	build -s ATVWJ4 $1
-	atvclean
-	build -s SNAP2 $1 
-	atvclean
-	build -s ATVMJ4 $1
+function build_all {
+	atv_clean
+	build -s ATVWJ4 $@
+	atv_clean
+	build -s SNAP2 $@
+	atv_clean
+	build -s ATVMJ4 $@
 }
 
-function copyAll {
+function atv_clean {
+	dir=$PWD
+		goto netra && make clean && goto net_dev_mgr && make clean && goto net_con_mgr && make clean && goto escore && make clean && cd $dir
+}
+
+function copy_all {
 	if [ "$#" -ne 1 ]; then
 		echo 'Please provide jira id'
+		echo 'e.g:'
+		echo -e
+		echo 'copy_all 3041'
 	else	
-		mkdir /home/oakeada/stories/$1 2>/dev/null
-		mkdir /home/oakeada/stories/$1/mj4 2>/dev/null
-		mkdir /home/oakeada/stories/$1/wj4 2>/dev/null
-		mkdir /home/oakeada/stories/$1/snap2 2>/dev/null
-	
-		cp ./ATVMJ4/*.img /home/oakeada/stories/$1/mj4 && echo 'successfully copied mj4 images'
-		cp ./ATVWJ4/*.img /home/oakeada/stories/$1/wj4 && echo 'successfully copied wj4 images'
-		cp ./SNAP2/*.img /home/oakeada/stories/$1/snap2 && echo 'successfully copied snap2 images'
+		cd ATVMJ4 && copy_images $1 mj4
+		cd .. && cd ATVWJ4 && copy_images $1 wj4
+		cd .. && cd SNAP2 && copy_images $1 snap2
 	fi
 }
 
-function copyImages {
+function copy_images {
 	if [ "$#" -ne 2 ]; then
 		echo 'Usage: copyImages <jira id> <board name>'
 		echo 'e.g:'
 		echo -e
-		echo 'copyImages 3041 snap2'
+		echo 'copy_images 3041 snap2'
 	else	
 		dir=/ccshare/linux/c_files/oakeada/stories/$1/$2
 		mkdir -p $dir 2>/dev/null

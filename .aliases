@@ -25,6 +25,10 @@ alias lgz="l | grep gz"
 alias c="clear"
 alias x="exit"
 
+function ip {
+	/bin/ip -c $@
+}
+
 alias gateway="ip route | grep default"
 alias sshupdate="echo \"\" > /home/$USER/.ssh/known_hosts"
 alias addtopath="PATH=$PATH:$(pwd)"
