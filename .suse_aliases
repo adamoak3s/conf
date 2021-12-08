@@ -215,6 +215,10 @@ function pwdd {
 	echo /ccshare/linux/c_files/oakeada/stories/$1
 }
 
+function mkshrc {
+	cp ~/stuff/mkshrc ./external/mksh/mkshrc && echo success
+}
+
 #ANDROID IMAGE CREATION
 function atvclean {
 	dir=$PWD
@@ -226,20 +230,20 @@ function _build {
 }
 
 function build {
-	if [ "$1" = "-s" ]; then
-		if [ "$#" -eq 0 ]; then
+	if [ "$1" = "-f" ]; then
+		if [ "$#" -eq 1 ]; then
 			echo 'Usage: build -s <board name> [extra build switches]'
 			echo 'e.g:'
 			echo -e
-			echo '    build ATVMJ4'
+			echo '    build -f ATVMJ4'
 			echo -e
-			echo '    build ATVMJ4 ATV_MANIFEST_BRANCH=oakeada-AFA1'
+			echo '    build -f ATVMJ4 ATV_MANIFEST_BRANCH=oakeada-AFA1'
 		else
-			_build 12 $1 $2 || _build 1 $1 $2
+			_build 12 $2 $3 || _build 1 $2 $3
 		fi
 	elif [ "$1" = "-a" ]; then
 	        if ! adb root > /dev/null; then   
-		        echo "Please run adb connect to use atest"	
+		        echo "Please run adb connect"	
 		else
 			APK_FILE=$(find . -name *.apk)
 			if [ "$APK_FILE" = "" ]; then 
@@ -251,7 +255,7 @@ function build {
 	else 
 			echo 'Usage: build <mode> [options]'
 			echo -e
-			echo '	-s		Builds a full system image'
+			echo '	-f		Builds a full system image'
 			echo '	-a		Builds & Installs application apk'
 			echo -e
 	fi
@@ -286,42 +290,41 @@ function copyImages {
 		echo 'Usage: copyImages <jira id> <board name>'
 		echo 'e.g:'
 		echo -e
-		echo '			Builds a full system image'
+		echo 'copyImages 3041 snap2'
 	else	
 		dir=/ccshare/linux/c_files/oakeada/stories/$1/$2
-		mkdir -p $dir
+		mkdir -p $dir 2>/dev/null
 	
-		cp *.img $dir && echo "successfully copied images to $dir"
+		cp *.img $dir 2>/dev/null && echo "successfully copied images to $dir"
 	fi
 }
 
 #STB jammers
 function jam_wj4 {
-	my_fastboot 192.168.1.116 ATVWJ4
+	if [ "$#" -eq 0 ]; then
+		_fastboot 192.168.1.116 ATVWJ4
+	else
+		_fastboot 192.168.1.116 ATVWJ4 true
+	fi
 }
 
 function jam_mj4 {
-	my_fastboot 192.168.1.104 ATVMJ4
+	if [ "$#" -eq 0 ]; then
+		_fastboot 192.168.1.104 ATVMJ4
+	else
+		_fastboot 192.168.1.104 ATVMJ4 true
+	fi
 }
 
 function jam_snap {
-	my_fastboot 192.168.1.114 SNAP2
+	if [ "$#" -eq 0 ]; then
+		_fastboot 192.168.1.114 SNAP2
+	else
+		_fastboot 192.168.1.114 SNAP2 true
+	fi
 }
 
-
-function djam_wj4 {
-	my_fastboot_d 192.168.1.116 ATVWJ4
-}
-
-function djam_mj4 {
-	my_fastboot_d 192.168.1.104 ATVMJ4
-}
-
-function djam_snap {
-	my_fastboot_d 192.168.1.113 SNAP2
-}
-
-function my_fastboot {
+function _fastboot {
 	echo "flashing from images in $PWD"
 		CMD="/home/oakeada/bin/fastboot -s tcp:$1"
 
@@ -330,21 +333,10 @@ function my_fastboot {
 		$CMD flash boot boot.img
 		$CMD flash cache cache.img
 		$CMD flash dtbo dtbo.$2.img
-		$CMD flash vbmeta vbmeta.img
-		$CMD flash super super.img
-		$CMD reboot
-}
 
-function my_fastboot_d {
-	echo "flashing from images in $PWD"
-		CMD="/home/oakeada/bin/fastboot -s tcp:$1"
-
-		$CMD erase misc
-		$CMD set_active a
-		$CMD flash boot boot.img
-		$CMD flash cache cache.img
-		$CMD flash dtbo dtbo.$2.img
+	if [ "$#" -eq 3 ]; then
 		$CMD flash userdata userdata.img
+	fi
 		$CMD flash vbmeta vbmeta.img
 		$CMD flash super super.img
 		$CMD reboot
