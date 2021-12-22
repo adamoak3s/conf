@@ -58,6 +58,16 @@ alias hopper="tnet 192.168.1.117"
 
 ##FUNCTIONS
 
+function defgrep {
+	ls -t *device* | grep $1 | xargs zgrep -h -e getLastLinkedReceiverInfo -e "Saved last" -e "WITH_HOPPER" -e stb_validate -e ACTION_AE_DISH_STANDBY_STATUS -e JOEY_CONNECT -e "Interface name:" -e "Interface ip:" -e "Interface ll_ip:" > ~/stuff/defgrep/j$1
+}
+
+function defgreph {
+	path1=${PWD%/*}
+	path2=${path1##*/}
+	ls -t *sg_server* | xargs zgrep -h -e master_connect -e master_disconnect  > ~/stuff/defgrep/h$path2
+}
+
 function toggle {
 	_toggle "$1_$2"
 		echo -e
@@ -207,25 +217,55 @@ function mkshrc {
 }
 
 #ANDROID IMAGE CREATION
-function _full_build_cmd {
-	make -j$1 -C /vobs/build $2DevRelease ATV_SYNC_SPEED=true ATV_SYNC_JOBS=12 ATV_PER_VIEW=true APKS_BUNDLE_ID=OAKES1 SWID=ADAM BUILD_NUMBER=00 LOCAL_GOOGLE_CLIENT_ID_BASE=android-dish-tv ANDROID_SUPPORTS_MEDIACAS=y VERBOSE=true "${@:3}"
+function _abuild {
+	CMD="make -j$1 -C /vobs/build $2DevRelease ATV_SYNC_SPEED=true ATV_SYNC_JOBS=12 ATV_PER_VIEW=true APKS_BUNDLE_ID=OAKES1 SWID=ADAM BUILD_NUMBER=00 LOCAL_GOOGLE_CLIENT_ID_BASE=android-dish-tv ANDROID_SUPPORTS_MEDIACAS=y VERBOSE=true "${@:3}""
+	CCMD="$(tput setab 2)$CMD$(tput sgr 0)"
+	echo $CCMD
+	$CMD
 }
 
 
-function _full_build {
-	if [ "$#" -eq 1 ]; then
-		echo 'Usage: build <board name> [extra build switches]'
+function abuild {
+	if [ "$#" -lt 1 ]; then
+		echo 'Usage: abuild <board name> [extra build switches]'
 		echo 'e.g:'
 		echo -e
-		echo '    build ATVMJ4'
+		echo '    abuild ATVMJ4'
 		echo -e
-		echo '    build ATVMJ4 ATV_MANIFEST_BRANCH=oakeada-AFA1'
+		echo '    abuild ATVMJ4 ATV_MANIFEST_BRANCH=oakeada-AFA1'
 	else
-		_full_build_cmd 12 $@ || _full_build_cmd 1 $@
+		_abuild 12 $@
 	fi
 }
 
-function _app_build {
+function abuildn {
+	if [ "$#" -lt 1 ]; then
+		echo 'Usage: abuildn <board name> [extra build switches]'
+		echo 'e.g:'
+		echo -e
+		echo '    abuildn ATVMJ4'
+		echo -e
+		echo '    abuildn ATVMJ4 ATV_MANIFEST_BRANCH=oakeada-AFA1'
+	else
+		_abuild 1 $@
+	fi
+}
+
+function atv_clean {
+	dir=$PWD
+	goto netra && make clean && goto net_dev_mgr && make clean && goto net_con_mgr && make clean && goto escore && make clean && cd $dir
+}
+
+function build_all {
+	atv_clean
+	abuild ATVWJ4 $@ || abuildn ATVWJ4 $@
+	atv_clean
+	abuild SNAP2 $@ || abuildn SNAP2 $@
+	atv_clean
+	abuild ATVMJ4 $@ || abuildn ATVMJ4 $@
+}
+
+function app_build {
         if ! adb root > /dev/null; then   
 	        echo "Please run adb connect"	
 	else
@@ -236,34 +276,6 @@ function _app_build {
 			make dev && echo "Successfully built app" && adb install $APK_FILE && echo "Successfully Installed app" && adb shell reboot
 		fi	
 	fi
-}
-
-function build {
-	if [ "$1" = "-f" ]; then
-		_full_build "${@:2}"
-	elif [ "$1" = "-a" ]; then
-		_app_build "${@:2}"
-	else 
-			echo 'Usage: build <mode> [options]'
-			echo -e
-			echo '	-f		Builds a full system image'
-			echo '	-a		Builds & Installs application apk'
-			echo -e
-	fi
-}
-
-function build_all {
-	atv_clean
-	build -s ATVWJ4 $@
-	atv_clean
-	build -s SNAP2 $@
-	atv_clean
-	build -s ATVMJ4 $@
-}
-
-function atv_clean {
-	dir=$PWD
-		goto netra && make clean && goto net_dev_mgr && make clean && goto net_con_mgr && make clean && goto escore && make clean && cd $dir
 }
 
 function copy_all {
@@ -287,7 +299,7 @@ function copy_images {
 		echo 'copy_images 3041 snap2'
 	else	
 		dir=/ccshare/linux/c_files/oakeada/stories/$1/$2
-		mkdir -p $dir 2>/dev/null
+		mkdir -p $dir 2>/dev/null || echo "failed to create directory!"
 	
 		cp *.img $dir 2>/dev/null && echo "successfully copied images to $dir"
 	fi
@@ -337,19 +349,21 @@ function _fastboot {
 }
 
 ##MISC
-#function atve {	
-#	if [ "$#" -ne 1 ]; then
-#		echo 'Please provide tarball'
-#	else
-#		TARBALL=$1	
-#		BASELINE=${TARBALL%%.*}
-#		echo $BASELINE
-#		DIRECTORY=~/stuff/$BASELINE
-#		mkdir $DIRECTORY && echo "created $DIRECTORY" \
-#		&& cp $1 $DIRECTORY/ && echo 'copied tarball' \
-#		cd $DIRECTORY && tar xzvf $1 && l
-#	fi
-#}
+function atve {	
+	if [ "$#" -ne 1 ]; then
+		echo 'Please provide tarball'
+	else
+		TARBALL=$1	
+		BASELINE=${TARBALL%%.*}
+		DIRECTORY=~/stuff/$BASELINE
+		mkdir $DIRECTORY 2>/dev/null
+		cp $1 $DIRECTORY \
+		&& cd $DIRECTORY \
+		&& echo 'Extracting images...' \
+		&& tar xf $1 \
+		&& l
+	fi
+}
 
 ###NOTES
 ##Update frameworks.jar

@@ -7,8 +7,6 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
-AppsKey & a::SendInput {Blind}{ CapsLock }
-
 AppsKey & i::SendInput {Blind}{ Up }
 AppsKey & j::SendInput {Blind}{ Left }
 AppsKey & k::SendInput {Blind}{ Down }
@@ -60,14 +58,22 @@ AppsKey & 2::
 
 AppsKey & 3::
 {
+   Send, su
+   SendInput {Space}
+   SendRaw, &&
+   SendInput {Space}
    Send, echo 3 > /proc/sysrq-trigger
+   SendInput {Space}
+   SendRaw, &&
+   SendInput {Space}
+   Send,logcat -G 100M
    send {Enter}
    return
 }
 
 AppsKey & 4::
 {
-   Send, logcat | grep -i ntpproxy
+   Send, echo 3 > /proc/sysrq-trigger
    send {Enter}
    return
 }
@@ -100,12 +106,19 @@ AppsKey & 8::
    return
 }
 
+AppsKey & 9::
+{
+   Send, logcat | grep -i ntpproxy
+   send {Enter}
+   return
+}
+
 #maxThreadsPerHotkey, 2
 setKeyDelay, 50, 50
 setMouseDelay, 50
 banana:=0
 
-AppsKey & 9::
+AppsKey & 0::
 	banana:=!banana
 	
 	while (banana=1)
