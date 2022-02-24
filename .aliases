@@ -9,14 +9,26 @@ alias uprc="source /home/$USER/.bashrc"
 alias catrc="cat /home/$USER/.conf/.aliases"
 
 ##SHORTENERS
-alias ll="lsd -al"
-alias l="lsd -l"
-alias lh="lsd -a"
+function my_ls {
+	lsd "$@" || ls "$@" 
+}
+
+alias l="my_ls -l"
+alias lh="my_ls -a"
+
+alias ll="l -a"
+alias ltr="l -tr"
+alias ld="l -d"
 alias lll="readlink -f"
 alias lgz="l | grep gz"
 
 alias c="clear"
 alias x="exit"
+alias xargs='xargs '
+
+function ip {
+	/bin/ip -c $@
+}
 
 alias gateway="ip route | grep default"
 alias sshupdate="echo \"\" > /home/$USER/.ssh/known_hosts"
@@ -59,6 +71,20 @@ alias munt="mount"
 alias moun="mount"
 
 ##FUNCTIONS
+function ltrd {
+	lsd -ltrd *$1*
+}
+
+function fgrep {
+        if [ "$#" -ne 3 ]; then
+        	echo "arguments: <string> <filetype>"
+		echo "e.g.: fgrep intent java"
+        else
+		grep -wEnIr $1 $(find . -iname *.$2)
+        fi
+
+}
+
 function gitm {
 	git fetch && git checkout remotes/origin/master
 }
@@ -69,6 +95,10 @@ function gitf {
 
 function gitco {
 	git checkout --track $1
+}
+
+function gitl {
+	git log --oneline | head
 }
 
 function edit {
@@ -103,7 +133,7 @@ function revslash {
 }
 
 function qfind {
-	find . -iname $1 2>/dev/null
+	find . -iname "$1" 2>/dev/null
 }
 
 function qgrep {
@@ -261,7 +291,7 @@ function showme {
   ##remove everything before & including last matching substring
    #${string##*substring}
    #e.g foo="letter" && echo ${foo##*t}
-   #will print "le"
+   #will print "er"
   ##manipulate string after a pipe
    #echo letter | (read x; echo ${x%t*})
    #will print "let"
