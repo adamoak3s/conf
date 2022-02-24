@@ -24,6 +24,7 @@ alias lgz="l | grep gz"
 
 alias c="clear"
 alias x="exit"
+alias xargs='xargs '
 
 function ip {
 	/bin/ip -c $@
@@ -132,7 +133,7 @@ function revslash {
 }
 
 function qfind {
-	find . -iname $1 2>/dev/null
+	find . -iname "$1" 2>/dev/null
 }
 
 function qgrep {
