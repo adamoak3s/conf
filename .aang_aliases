@@ -1,0 +1,4 @@
+function sshs {
+	ssh -o IPQoS=throughput $1
+
+}

@@ -4,7 +4,7 @@ HISTFILESIZE=20000
 source /Users/$USER/.conf/.local_aliases
 
 function ls {
-    lsd $1 || ls $1
+    lsd $@ || ls $@
 }
 
 ##META
