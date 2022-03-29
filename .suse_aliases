@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 ##UPKEEP
 alias vimsrc="vim /home/oakeada/.conf/.suse_aliases"
 
@@ -9,12 +10,17 @@ alias catcs="ct catcs"
 alias setcs="ct setcs"
 alias lsco="ct lsco -r -me -cview"
 alias lscos="ct lsco -r -me -cview -short"
+alias headcs="ct catcs | head"
+alias tailcs="ct catcs | tail"
+alias img2nfs="cp /vobs/build/link/appcreate/gandalf_dev_debug.update ~/nfspoint"
 
 # references
 alias jamr_hopper="echo '$(tput setab 3) mount -t nfs -o soft,nolock 192.168.1.1:/home/oakeada/mnt/ /mnt/mine$(tput sgr 0)'"
 alias dmjar="echo '/home/oakeada/ATV/android-q-10/vendor/dish/apks/DeviceManager/DeviceMgr.RemoteSvc.NDrain/app/src/main/libs/utils.jar'"
 alias selinuxr="echo 'allow scontext tcontext:tclass { permission }'"
 alias hopinfo="echo 'RID: R1911703129-35 -- SCID: S1967502974-75'"
+alias raspberry_pi="10.74.148.211"
+alias jql_all_stories="echo 'project = GOT and Sprint in closedSprints()  and assignee = currentUser() AND issuetype = Story'"
 
 #frequent dirs
 alias cdv="cd /home/oakeada/views; ltr"
@@ -37,6 +43,8 @@ alias reboot_wj4="wj4_off && sleep 15 && wj4_on"
 alias suse_on="_toggle g2_on"
 alias suse_off="_toggle g2_off"
 alias reboot_suse="suse_off && sleep 15 && suse_on"
+
+alias bender="_toggle bender_press"
 
 #misc
 alias leases="cat ./var/lib/misc/dnsmasq.leases"
@@ -180,7 +188,8 @@ alias 5="input keyevent 12" && \
 alias 6="input keyevent 13" && \
 alias 7="input keyevent 14" && \
 alias 8="input keyevent 15" && \
-alias q="input keyevent 4"'
+alias b="input keyevent 4" && \
+alias h="input keyevent 3"'
 }
 
 function run_instrument {
@@ -216,6 +225,9 @@ function _abuild {
 	$CMD
 }
 
+function hopper_tip_android_build {
+make -j12 -C /vobs/build zip1018DevRelease IPERF3=true REMOTE_PAIRING_UX_IMPROVEMENT=true ADJUSTMENT_CONTENT_FILTERS_ON_DEMAND=false BINGE_WATCHING=true USE_LOCAL_DNS=true USE_APP_BRIDGE=true OOF_OVER_IP_SUPPORT=true HOPPER_PLUS_SUPPORT=true HHK_LINK_PROTECTION=true ATV_STBH_APP_ANALYTICS=true DVR_TO_VOD_RECOVERY=true ATV_STBH_LAUNCHER_ANALYTICS=true ATV_STBH_GOOGLE_ASSISTANT_ANALYTICS=true ATV_STBH_GOOGLE_SETTINGS_ANALYTICS=true AMAZON_CONTAINER_SUPPORT=false DEBUG_USE_LIBASAN=false ON_DEMAND_NETWORK_ATTRIBUTION=true MULTI_IP_STREAMS=true NCM_RANDOMIZE_VLAN_MAC=true OMEGA_SLOW_MOTION_TRICKMODES=true DEBUG_USE_LIBASAN=true INVIDI_ZONE_ID=true SW_INTENT=QUANTUM SWID=test HOPPER+PLUS_SUPPORT=true
+}
 
 function abuild {
 	if [ "$#" -lt 1 ]; then
@@ -291,9 +303,7 @@ function copy_images {
 		echo 'copy_images 3041 snap2'
 	else	
 		dir=/ccshare/linux/c_files/oakeada/stories/$1/$2
-		mkdir -p $dir 2>/dev/null || echo "failed to create directory!"
-	
-		cp *.img $dir 2>/dev/null && echo "successfully copied images to $dir"
+		mkdir -p $dir && cp *.img $dir
 	fi
 }
 
@@ -314,9 +324,9 @@ function jam_mj4 {
     echo "$(tput setab 1)ifconfig eth2 -auto && boot -raw -noclose -bsu -addr=0x42000000 -max=0x100000 flash0.bsu_a && android fastboot -transport=tcp -device=flash0$(tput sgr 0)"
     echo -e
     if [ "$#" -eq 0 ]; then
-		_fastboot 192.168.1.104 ATVMJ4
+		_fastboot 192.168.1.106 ATVMJ4
 	else
-		_fastboot 192.168.1.104 ATVMJ4 true
+		_fastboot 192.168.1.106 ATVMJ4 true
 	fi
 }
 
@@ -378,10 +388,6 @@ function ztail {
         echo "$i: "
         zcat $i | tail -1
      done
-}
-
-function lirc {
-    ssh pi@192.168.1.106
 }
 
 ###NOTES
