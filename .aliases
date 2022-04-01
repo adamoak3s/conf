@@ -230,6 +230,29 @@ function showme {
 	cat $path | head -$end | tail -$len
 }
 
+function showme_multiple {
+	CONTENT=$1
+	PARTIALLY_PARSED_CONTENT=${foo#*:}
+	LINE_NUMBER=${PARTIALLY_PARSED_CONTENT%%:*}
+	LINE_NUMBER=$LINE_NUMBER-1
+	LAST_LINE=$LINE_NUMBER+20
+	FILE_PATH=${CONTENT%%:*}
+	theLine=$(cat $path | head -$lineNum | tail -1)	
+
+	# print the 20 lines preceeding the line-of-interest
+	cat $path | head -$LINE_NUMBER | tail -20
+	# print the line-of-interest highlighted yellow
+	echo "$(tput setab 2) $theLine $(tput sgr 0)"
+	# print the 20 lines succeeding the line-of-interest
+	cat $path | head -$LAST_LINE | tail -20
+}
+function showme2 {
+    for var in $@
+        do
+            showme_multiple $var
+	done
+}
+
 ####USER NOTES - USEFUL COMMANDS
  ###COMMANDS IN SUCCESSION
   #run b iff a is sucessful
@@ -261,7 +284,7 @@ function showme {
   ##xargs
     #By default xargs reads items from standard input as separated by blanks and executes a command once for each argument.
      #echo 'one two three' | xargs mkdir
-    #will execute: 
+    #will execute: k
      #$mkdir one 
      #$mkdir two
      #$mkdir three
