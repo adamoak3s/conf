@@ -30,34 +30,104 @@ alias tip="cd ~/tip;ls -l"
 alias builds_release="cd ~/builds_release"
 
 #smart switches
-alias mj4_off="_toggle g1_off"
-alias mj4_on="toggle g1_on"
-function dmgr {
-    cd ~/atv/"$VERSION"/android-q-10/vendor/dish/apps/DeviceMgr
-}
-alias reboot_mj4="mj4_off && sleep 15 && mj4_on"
-
-alias wj4_on="_toggle g4_on"
-alias wj4_off="_toggle g4_off"
-alias reboot_wj4="wj4_off && sleep 15 && wj4_on"
+alias hopper_wan_on="_toggle g4_on"
+alias hopper_wan_off="_toggle g4_off"
 
 alias suse_on="_toggle g2_on"
 alias suse_off="_toggle g2_off"
 alias reboot_suse="suse_off && sleep 15 && suse_on"
 
 alias bender="_toggle bender_press"
-alias rpi="ssh -X pi@192.168.1.105"
+#alias rpi="ssh -X pi@192.168.1.105"
 
 #misc
+alias junkin="vim ~/stuff/stuff.txt"
+alias junkout="cat ~/stuff/stuff.txt"
 alias leases="cat ./var/lib/misc/dnsmasq.leases"
 alias lcs="l *.cs"
-alias shhatv="echo 'echo 3 >  /proc/sysrq-trigger'"
+alias shhatv="echo 'echo 3 >  /prock/sysrq-trigger'"
 alias loge="echo 'LOG_ERROR(\"%s():adam - \", __FUNCTION__);'"
 alias make_jar="cd /home/oakeada/ATV/android-q-10/vendor/dish/apps/sgsLite/atv_utils/build/intermediates/javac/debug/classes && jar -cf utils.jar com/dish/atv/* && cp utils.jar /home/oakeada/ATV/android-q-10/vendor/dish/apks/DeviceManager/DeviceMgr.RemoteSvc.NDrain/app/src/main/libs/com.dish.atv/utils.jar && cd -"
 alias mlunch="source ~/ATV/android-q-10/build/make/envsetup.sh && lunch"
 alias hopper="tnet 192.168.1.117"
 
 ##FUNCTIONS
+function dmgr {
+    cd ~/atv/"$VERSION"/android-q-10/vendor/dish/apps/DeviceMgr
+}
+
+function sgrep {
+    N=10; grep -roP ".{0,$N}$1.{0,$N}j" .
+}
+
+function hdmi {
+        #do something here!
+
+        echo "What do you wish to control?"
+        echo "1) TV"
+        echo "2) capture-card"
+        echo -e
+        read -n 1 k <&1
+        echo -e
+        case $k in
+        "1")
+            while : ; do
+                echo "Which device do you want to see?"
+                echo "1) MJ4"
+                echo "2) WJ4"
+                echo "3) SNAP2"
+                echo "4) QUIT"
+                read -n 1 j <&1
+                echo -e
+                case $j in
+                "1")
+                    _hdmi mj4
+                    ;;
+                "2")
+                    _hdmi wj4
+                    ;;
+                "3")
+                    _hdmi snap2
+                    ;;
+                "4")
+                    break
+                    ;;
+                esac
+            done    
+            ;;
+        "2")
+            while : ; do
+                echo "Which device do you want to see?"
+                echo "1) MJ4"
+                echo "2) WJ4"
+                echo "3) SNAP2"
+                echo "4) QUIT"
+                read -n 1 j <&1
+i                echo -e
+                case $j in
+                "1")
+                    _hdmi mj4r
+                    ;;
+                "2")
+                    _hdmi wj4r
+                    ;;
+                "3")
+                    _hdmi snap2r
+                    ;;
+                "4")
+                    break
+                    ;;
+                esac
+            done    
+            ;;
+        esac
+
+}
+
+function _hdmi {
+   curl -H "Content-type: application/json" -H "Accept: application/json" -X GET http://10.74.148.211:8080/$1
+}
+
 
 function defgrep {
     ls -t *device* | grep $1 | xargs zgrep -h -e getLastLinkedReceiverInfo -e "Saved last" -e "WITH_HOPPER" -e stb_validate -e ACTION_AE_DISH_STANDBY_STATUS -e JOEY_CONNECT -e "Interface name:" -e "Interface ip:" -e "Interface ll_ip:" > ~/stuff/defgrep/j$1
@@ -216,15 +286,15 @@ function pwdd {
 }
 
 function mkshrc {
-    k	cp ~/stuff/mkshrc ./external/mksh/mkshrc && echo success
+    cp ~/stuff/mkshrc ./external/mksh/mkshrc && echo success
 }
 
 #kANDROID IMAGE CREATION
 function _abuild {
     CMD="make -j$1 -C /vobs/build $2DevRelease ATV_SYNC_SPEED=true ATV_SYNC_JOBS=12 ATV_PER_VIEW=true APKS_BUNDLE_ID=OAKES1 SWID=ADAM BUILD_NUMBER=00 LOCAL_GOOGLE_CLIENT_ID_BASE=android-dish-tv ANDROID_SUPPORTS_MEDIACAS=y VERBOSE=true "${@:3}""
-        CCMD="$(tput setab 2)$CMD$(tput sgr 0)"
-        i	echo $CCMD
-        i	$CMD
+    CCMD="$(tput setab 2)$CMD$(tput sgr 0)"
+    echo $CCMD
+    $CMD
 }
 
 function hopper_tip_android_build {
@@ -232,43 +302,36 @@ function hopper_tip_android_build {
 }
 
 function abuild {
-    	if [ "$#" -lt 1 ]; then
-        echo 'Usage: abuild <board name> [extra build switches]'
-        		echo 'e.g:'
-        echo -e
-        echo '    abuild ATVMJ4'
-        echo -e
-        echo '    abuild ATVMJ4 ATV_MANIFEST_BRANCH=oakeada-AFA1'
+        if [ "$#" -lt 2 ]; then
+              echo 'Usage: abuild <make threads> <board name> [extra build switches]'
+              echo 'e.g:'
+              echo -e
+              echo '  abuild 12 ATVMJ4'
+              echo -e
+              echo '  abuild 1 ATVMJ4 ATV_MANIFEST_BRANCH=oakeada-AFA1'
         else
-            _abuild 12 $@
-                fi
-}
-
-function abuildn {
-    if [ "$#" -lt 1 ]; then
-        echo 'Usage: abuildn <board name> [extra build switches]'
-            echo 'e.g:'
-            echo -e
-            echo '    abuildn ATVMJ4'
-            echo -e
-            i		echo '    abuildn ATVMJ4 ATV_MANIFEST_BRANCH=oakeada-AFA1'
-    else
-        _abuild 1 $@
-            fi
+              _abuild $@
+        fi
 }
 
 function atv_clean {
-    dir=$PWD
-        goto netra && make clean && goto net_dev_mgr && make clean && goto net_con_mgr && make clean && goto escore && make clean && goto security && make clean && cd $dir
+      dir=$PWD
+      goto netra && make clean && goto net_dev_mgr && make clean && goto net_con_mgr && make clean && goto escore && make clean && goto security && make clean && cd $dir
 }
 
 function build_all {
-    atv_clean
-        abuild ATVWJ4 $@ || abuildn ATVWJ4 $@
-        atv_clean
-        abuild SNAP2 $@ || abuildn SNAP2 $@
-        atv_clean
-        abuild ATVMJ4 $@ || abuildn ATVMJ4 $@
+      atv_clean
+      abuild 1 ATVWJ4 $@
+      atv_clean
+      abuild 1 SNAP2 $@
+      atv_clean
+      abuild 1 ATVMJ4 $@
+}
+function _abuild {
+      CMD="make -j$1 -C /vobs/build $2DevRelease ATV_SYNC_SPEED=true ATV_SYNC_JOBS=12 ATV_PER_VIEW=true APKS_BUNDLE_ID=OAKES1 SWID=ADAM BUILD_NUMBER=00 LOCAL_GOOGLE_CLIENT_ID_BASE=android-dish-tv ANDROID_SUPPORTS_MEDIACAS=y VERBOSE=true "${@:3}""
+      CCMD="$(tput setab 2)$CMD$(tput sgr 0)"
+      echo $CCMD
+      $CMD
 }
 
 function app_build {
@@ -308,24 +371,38 @@ function version_check {
             fi
 }
 
-function aroot {
+function atvroot {
     version_check
-        cd ~/ATV/$VERSION/android-q-10
+    cd ~/ATV/$VERSION/android-q-10
 }
 
-function aout {
+function atvout {
     version_check
-        cd ~/ATV/"$VERSION"/android-q-10/out/target/product
+    cd ~/ATV/"$VERSION"/android-q-10/out/target/product
 }
 
 function dmgr {
     version_check
-        cd ~/ATV/"$VERSION"/android-q-10/vendor/dish/apps/DeviceManager
+    cd ~/ATV/"$VERSION"/android-q-10/vendor/dish/apps/DeviceManager
 }
 
 function proxy {
     version_check
-        cd ~/ATV/"$VERSION"/android-q-10/vendor/dish/apps/NtpProxy
+    cd ~/ATV/"$VERSION"/android-q-10/vendor/dish/apps/NtpProxy
+}
+
+function foo {
+    while : ; do
+        #do something here!
+
+        echo "Press 'q' to exit"
+        echo "Press any other key to run the program again"
+        read -n 1 k <&1
+        if [[ $k = q ]] ; then
+            printf "\nQuitting from the program\n"
+            break
+        fi
+    done
 }
 
 function remote {
@@ -425,7 +502,7 @@ function remote {
 function _remote {
     adb shell input keyevent $1
 }
-
+i
 function copy_all {
     if [ "$#" -ne 1 ]; then
         echo 'Please provide jira id'
@@ -450,9 +527,9 @@ function copy_images {
         echo 'Usage: copyImages <jira id> <board name>'
             echo 'e.g:'
             echo -e
-            i		echo 'copy_images 3041 snap2'
+            echo 'copy_images 3041 snap2'
     else	
-        dir=i"/ccshare/linux/c_files/oakeada/stories/$1/$2"
+        dir="/ccshare/linux/c_files/oakeada/stories/$1/$2"
             mkdir -p $dir && echo "successfully created directory $dir"
             cp *.img "$dir"
             fi
@@ -477,7 +554,7 @@ function jam_snap {
     echo -e
         echo "$(tput setab 1)ifconfig eth0 -auto && boot -raw -noclose -bsu -addr=0x42000000 -max=0x100000 flash0.bsu_a && android fastboot -transport=tcp -device=flash0$(tput sgr 0)"
         echo -e
-        _fastboot 192.168.1.114 SNAP2 $1
+        _fastboot 192.168.1.117 SNAP2 $1
 }
 
 function _fastboot {
