@@ -2,3 +2,10 @@ function sshs {
 	ssh -o IPQoS=throughput $1
 
 }
+
+alias keytool="sudo keytool -import -alias nexus -keystore lib/security/cacerts -file ~/Desktop/nexus.dtc.dish.corp.cer"
+
+export JAVA_HOME="/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home"
+
+export ANDROID_SDK_ROOT="/Users/adamoakes/Documents/android-sdk-Dish"
+export PATH=$PATH:$ANDROID_SDK_ROOT/build-tools/30.0.2:$ANDROID_SDK_ROOT/tools/bin:$ANDROID_SDK_ROOT/platform-tools
