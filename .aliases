@@ -1,5 +1,6 @@
 HISTSIZE=20000
 HISTFILESIZE=20000
+export HISTTIMEFORMAT="%F %r "
 
 source /home/$USER/.conf/.local_aliases
 
@@ -20,7 +21,6 @@ alias ll="l -a"
 alias ltr="l -tr"
 alias ld="l -d"
 alias lll="readlink -f"
-alias lgz="l | grep gz"
 
 alias c="clear"
 alias x="exit"
@@ -56,6 +56,7 @@ alias fdsik="fdisk"
 alias ipa="ip a"
 alias suod="sudo"
 
+alias lcs="ltr *.cs | grep -v UBUNTU"
 alias vmi="vim"
 alias cim="vim"
 alias bim="vim"
@@ -69,6 +70,8 @@ alias soure="source"
 alias mont="mount"
 alias munt="mount"
 alias moun="mount"
+
+alias tmux0="tmux attach -t 0"
 
 ##FUNCTIONS
 function ltrd {
@@ -147,7 +150,7 @@ function hgrep {
 function ccc {
     for i in {1..40}
     do
-	echo -e
+	echo -
     done
     clear
 }
