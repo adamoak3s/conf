@@ -2,12 +2,18 @@ HISTSIZE=20000
 HISTFILESIZE=20000
 export HISTTIMEFORMAT="%F %r "
 
-source /home/$USER/.conf/.local_aliases
+source ~/.conf/.local_aliases
+source $LOCAL_ALIASES
+
+function ls {
+    lsd $@ || ls $@
+}
 
 ##META
-alias vimrc="vim /home/$USER/.conf/.aliases"
-alias uprc="source /home/$USER/.bashrc"
-alias catrc="cat /home/$USER/.conf/.aliases"
+alias vimrc="vim ~/conf/.aliases"
+alias uprc="source ~/.bashrc"
+alias catrc="cat ~/.conf/.aliases"
+alias vimlc="vim $LOCAL_ALIASES"
 
 ##SHORTENERS
 function my_ls {
