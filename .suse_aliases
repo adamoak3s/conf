@@ -1,40 +1,40 @@
+#!/bin/bash
+
+
 ##UPKEEP
 alias vimsrc="vim /home/oakeada/.conf/.suse_aliases"
 
-##SCRIPTS & BINARIES
-alias vscode="/home/oakeada/bin/VSCode-linux-x64/bin/code"
-alias adb="/home/oakeada/bin/adb"
-
 ##CLEARCASE CMDS
-alias cdv="cd /home/oakeada/views; l"
-alias cdvobs="cd /view/$(ls_tag)/vobs"
-alias edcs="ct edcs"
+#alias edcs="ct edcs"
 alias catcs="ct catcs"
 alias setcs="ct setcs"
 alias lsco="ct lsco -r -me -cview"
 alias lscos="ct lsco -r -me -cview -short"
+alias headcs="ct catcs | head"
+alias tailcs="ct catcs | tail"
+alias img2nfs="cp /vobs/build/link/appcreate/gandalf_dev_debug.update ~/nfspoint"
 
-#jamming references
-alias jamr_pizza_util="echo 'boot -noclose -elf -bsu flash0.bsu && ifconfig eth2 -auto && android fastboot -device=flash0 -transport=tcp' && echo '$(tput setab 1)run ^THIS^ cmd in BOLT & then run vTHISv cmd here$(tput sgr 0)' && echo '/home/oakeada/c_files/androidtv/scripts/update_joey4.sh 192.168.1.105 && eth2_off'"
+# references
 alias jamr_hopper="echo '$(tput setab 3) mount -t nfs -o soft,nolock 192.168.1.1:/home/oakeada/mnt/ /mnt/mine$(tput sgr 0)'"
-alias jamr_snap="echo 'boot -raw -addr=0x42000000 -bsu flash0.bsu && ifconfig eth1 -auto && android fastboot -device=flash0 -transport=tcp' && echo '$(tput setab 1)run ^THIS^ cmd in BOLT & then run vTHISv cmd here$(tput sgr 0)' && echo 'update_snap'"
-alias jamr_mj4="echo 'boot -raw -addr=0x42000000 -bsu flash0.bsu && ifconfig eth2 -auto && android fastboot -device=flash0 -transport=tcp' && echo '$(tput setab 1)run ^THIS^ cmd in BOLT & then run vTHISv cmd in img dir$(tput sgr 0)' && echo 'jam_mj4'"
-alias jamr_wj4="echo 'boot -raw -noclose -bsu -addr=0x42000000 -max=0x20000 flash0.bsu && ifconfig eth1 -auto && android fastboot -device=flash0 -transport=tcp'  && echo '$(tput setab 1)run ^THIS^ cmd in BOLT & then run vTHISv cmd in img dir$(tput sgr 0)' && echo 'update_wj4'"
-
 alias dmjar="echo '/home/oakeada/ATV/android-q-10/vendor/dish/apks/DeviceManager/DeviceMgr.RemoteSvc.NDrain/app/src/main/libs/utils.jar'"
-
 alias selinuxr="echo 'allow scontext tcontext:tclass { permission }'"
+alias hopinfo="echo 'RID: R1911703129-35 -- SCID: S1967502974-75'"
+alias raspberry_pi="10.74.148.211"
+alias jql_all_stories="echo 'project = GOT and Sprint in closedSprints()  and assignee = currentUser() AND issuetype = Story'"
 
 #frequent dirs
-alias aroot="cd ~/ATV/android-q-10"
+alias cdv="cd /home/oakeada/views; ltr"
 alias sepolicy="cd /home/oakeada/ATV/android-q-10/device/broadcom/inuvik/dish_selinux_policy"
-alias aout="cd /home/oakeada/ATV/android-q-10/out/target/product"
 alias stories="cd ~/stories; l"
 alias tip="cd ~/tip;ls -l"
+alias builds_release="cd ~/builds_release"
 
 #smart switches
 alias mj4_off="_toggle g1_off"
 alias mj4_on="toggle g1_on"
+function dmgr {
+    cd ~/atv/"$VERSION"/android-q-10/vendor/dish/apps/DeviceMgr
+}
 alias reboot_mj4="mj4_off && sleep 15 && mj4_on"
 
 alias wj4_on="_toggle g4_on"
@@ -45,143 +45,487 @@ alias suse_on="_toggle g2_on"
 alias suse_off="_toggle g2_off"
 alias reboot_suse="suse_off && sleep 15 && suse_on"
 
-#misc
-alias shhatv="echo 'echo 3 >  /proc/sysrq-trigger'"
-alias adbc="adb connect 192.168.1.105:5555 && adb root"
-alias loge="echo 'LOG_ERROR(\"%s():\", __FUNCTION__);'"
-alias pi="echo '10.74.148.212'"
-alias apush="eth2_on && sleep 10 && adb connect 192.168.1.105:5555 && adb root && adb push /home/oakeada/amnt/esncmd /data/mine && eth2_off"
-alias make_jar="cd /home/oakeada/ATV/android-q-10/vendor/dish/apps/sgsLite/atv_utils/build/intermediates/javac/debug/classes && jar -cf utils.jar com/dish/atv/* && cp utils.jar /home/oakeada/ATV/android-q-10/vendor/dish/apks/DeviceManager/DeviceMgr.RemoteSvc.NDrain/app/src/main/libs/com.dish.atv/utils.jar && cd -"
+alias bender="_toggle bender_press"
+alias rpi="ssh -X pi@192.168.1.105"
 
-alias mlunch="source ~/ATV/android-q-10/build/make/envsetup.sh && lunch 2"
+#misc
+alias leases="cat ./var/lib/misc/dnsmasq.leases"
+alias lcs="l *.cs"
+alias shhatv="echo 'echo 3 >  /proc/sysrq-trigger'"
+alias loge="echo 'LOG_ERROR(\"%s():adam - \", __FUNCTION__);'"
+alias make_jar="cd /home/oakeada/ATV/android-q-10/vendor/dish/apps/sgsLite/atv_utils/build/intermediates/javac/debug/classes && jar -cf utils.jar com/dish/atv/* && cp utils.jar /home/oakeada/ATV/android-q-10/vendor/dish/apks/DeviceManager/DeviceMgr.RemoteSvc.NDrain/app/src/main/libs/com.dish.atv/utils.jar && cd -"
+alias mlunch="source ~/ATV/android-q-10/build/make/envsetup.sh && lunch"
+alias hopper="tnet 192.168.1.117"
+
 ##FUNCTIONS
 
+function defgrep {
+    ls -t *device* | grep $1 | xargs zgrep -h -e getLastLinkedReceiverInfo -e "Saved last" -e "WITH_HOPPER" -e stb_validate -e ACTION_AE_DISH_STANDBY_STATUS -e JOEY_CONNECT -e "Interface name:" -e "Interface ip:" -e "Interface ll_ip:" > ~/stuff/defgrep/j$1
+}
+
+function defgreph {
+    path1=${PWD%/*}
+                  path2=${path1##*/}
+    ls -t *sg_server* | xargs zgrep -h -e master_connect -e master_disconnect  > ~/stuff/defgrep/h$path2
+}
+
 function toggle {
-	_toggle "$1_$2"
-	echo -e
+    _toggle "$1_$2"
+        echo -e
 }
 
 function _toggle {
-	curl -X POST "http://maker.ifttt.com/trigger/$1/with/key/ceyFl30ngD4ES9fFogAKfl"
-	echo -e
+    curl -X POST "http://maker.ifttt.com/trigger/$1/with/key/ceyFl30ngD4ES9fFogAKfl"
+        echo -e
 }
 
 #Clearcase functions
+
 function fmerge {
-	if [ "$#" -ne 1 ]; then
-		echo 'Please provide merge-from-branch'
-	else	
-		ct findmerge . -fver $1 -qal -gmerge
-	fi
+    if [ "$#" -ne 1 ]; then
+        echo 'Please provide merge-from-branch'
+    else	
+        ct findmerge . -fver $1 -qal -gmerge
+            fi
 }
 
 function eclipse {
-	fullpath=$(readlink -f $1)
-	#remove the first /
-	path1=${fullpath#*/}
-	#remove 'view/'
-	path2=${path1#*/}
-	# remove '<viewname>/'
-	path=${path2#*/}
-	eclipse_string="element /$path -none"
-
-	cp $1 $1.keep
-
-	config_spec="/home/oakeada/config_specs/$(ls_tag).cs"
-	echo $eclipse_string > $config_spec
-	catcs >> $config_spec
-	setcs $config_spec
-
-	mv $1.keep $1
-	chmod 777 $1
+## OBTAIN RELATIVE PATH OF FILE
+    abspath=`readlink -f $1`
+        path1=${abspath#*/}
+    path2=${path1#*/}
+    relpath=${path2#*/}
+## ECLIPSE THE FILE
+# back it up
+    cp $1 $1.keep
+# hide it
+        config_spec="/home/oakeada/config_specs/$(ls_tag).cs"
+        echo "element /$relpath -none" > $config_spec
+        catcs >> $config_spec
+        setcs $config_spec
+# eclipse the element with the backup
+        mv $1.keep $1
+        chmod 777 $1
 }
 
 function edcs {
-	config_spec="/home/oakeada/config_specs/$(ls_tag).cs"
-	vim $config_spec && setcs $config_spec	
+    echo "Using aliased edcs"
+        config_spec="/home/oakeada/config_specs/$(ls_tag).cs"
+        ct edcs && 
+        catcs > $config_spec
 }
 
 function cia {
-	 ct ci -c "$1" $(lscos)
+    ct ci -c "$1" $(lscos)
 }
 
 
 function msv {
-	csv ${1%.*}
+    csv ${1%.*}
 }
 
 function mrv {
-	rmv ${1%.*}
+    for view in $@ 
+        do
+            rmv ${view%.*}
+        done
+}
+
+function keepall {
+    for dir in $@ 
+        do
+            mv $dir ${dir}.bak
+                done
 }
 
 function ls_tag {
-	ct pwv | awk '{print $NF}' | tail -1
+    ct pwv | awk '{print $NF}' | tail -1
 }
 
 function co {
-	ct co -nc $1
+    ct co -nc $1
 }
 
 function goto {
-	cd /view/$(ls_tag)/vobs/modules/$1 2>/dev/null|| cd /view/$(ls_tag)/vobs/$1
+    cd /view/$(ls_tag)/vobs/modules/$1 2>/dev/null|| cd /view/$(ls_tag)/vobs/$1
+}
+
+function create_view {
+    FULLPATH=$(readlink -f $1)
+        FILENAME=${FULLPATH##*/}
+    BUILDID=${FILENAME%.*}
+    VIEW=oakeada-$BUILDID
+
+        cdv
+        cmv $VIEW
+        echo -e
+        echo "$(tput setab 1)setcs $FULLPATH $(tput sgr 0)"
+        echo -e
+        msv $VIEW
 }
 
 #misc
 function csd {
-	cd GOT-$1
+    cd GOT-$1
 }
 
-function mksdir {
-	mkdir GOT-$1
-}
-
-function jamr_pizza {
-	eth2_on && jamr_pizza_util
+function keep {
+    mv $1 $1.bak
 }
 
 
-function ktip {
-	for var in $@
-		do
-			cp $var $var.tip
-				done
+#MISC ANDROID
+function keyevent {
+    echo 'alias e="input keyevent 23" && \
+        alias s="input keyevent 20" && \
+        alias a="input keyevent 21" && \
+        alias d="input keyevent 22" && \
+        alias w="input keyevent 19" && \
+        alias 0="input keyevent 7" && \
+        alias 1="input keyevent 8" && \
+        alias 2="input keyevent 9" && \
+        alias 3="input keyevent 10" && \
+        alias 4="input keyevent 11" && \
+        alias 5="input keyevent 12" && \
+        alias 6="input keyevent 13" && \
+        alias 7="input keyevent 14" && \
+        alias 8="input keyevent 15" && \
+        alias b="input keyevent 4" && \
+        alias h="input keyevent 3"'
 }
 
-function kmine {
-	for var in $@
-		do
-			mv $var $var.mine
-				done
-}
-
-#Android functions
 function run_instrument {
-	adb shell am instrument -r -w $1
+    adb shell am instrument -r -w $1
 }
 
 function afind {
-	aroot && lll $(find . -iname $1) 2>/dev/null
-	cd - >/dev/null
+    aroot && lll $(find . -iname $1) 2>/dev/null
+        cd - >/dev/null
+}
+
+function cleanDM {
+    if [ "$#" -ne 1 ]; then
+        echo 'Please provide view name'
+    else	
+        rm -rf /home/oakeada/ATV/$1/android-q-10/out/soong/.glob/vendor/dish/apks/DeviceManager/DeviceMgr_RemoteSvc_NDrain
+            fi
+}
+k
+function pwdd {
+    echo /ccshare/linux/c_files/oakeada/stories/$1
+}
+
+function mkshrc {
+    k	cp ~/stuff/mkshrc ./external/mksh/mkshrc && echo success
+}
+
+#kANDROID IMAGE CREATION
+function _abuild {
+    CMD="make -j$1 -C /vobs/build $2DevRelease ATV_SYNC_SPEED=true ATV_SYNC_JOBS=12 ATV_PER_VIEW=true APKS_BUNDLE_ID=OAKES1 SWID=ADAM BUILD_NUMBER=00 LOCAL_GOOGLE_CLIENT_ID_BASE=android-dish-tv ANDROID_SUPPORTS_MEDIACAS=y VERBOSE=true "${@:3}""
+        CCMD="$(tput setab 2)$CMD$(tput sgr 0)"
+        i	echo $CCMD
+        i	$CMD
+}
+
+function hopper_tip_android_build {
+    make -j12 -C /vobs/build zip1018DevRelease IPERF3=true REMOTE_PAIRING_UX_IMPROVEMENT=true ADJUSTMENT_CONTENT_FILTERS_ON_DEMAND=false BINGE_WATCHING=true USE_LOCAL_DNS=true USE_APP_BRIDGE=true OOF_OVER_IP_SUPPORT=true HOPPER_PLUS_SUPPORT=true HHK_LINK_PROTECTION=true ATV_STBH_APP_ANALYTICS=true DVR_TO_VOD_RECOVERY=true ATV_STBH_LAUNCHER_ANALYTICS=true ATV_STBH_GOOGLE_ASSISTANT_ANALYTICS=true ATV_STBH_GOOGLE_SETTINGS_ANALYTICS=true AMAZON_CONTAINER_SUPPORT=false DEBUG_USE_LIBASAN=false ON_DEMAND_NETWORK_ATTRIBUTION=true MULTI_IP_STREAMS=true NCM_RANDOMIZE_VLAN_MAC=true OMEGA_SLOW_MOTION_TRICKMODES=true DEBUG_USE_LIBASAN=true INVIDI_ZONE_ID=true SW_INTENT=QUANTUM SWID=test HOPPER+PLUS_SUPPORT=true
+}
+
+function abuild {
+    	if [ "$#" -lt 1 ]; then
+        echo 'Usage: abuild <board name> [extra build switches]'
+        		echo 'e.g:'
+        echo -e
+        echo '    abuild ATVMJ4'
+        echo -e
+        echo '    abuild ATVMJ4 ATV_MANIFEST_BRANCH=oakeada-AFA1'
+        else
+            _abuild 12 $@
+                fi
+}
+
+function abuildn {
+    if [ "$#" -lt 1 ]; then
+        echo 'Usage: abuildn <board name> [extra build switches]'
+            echo 'e.g:'
+            echo -e
+            echo '    abuildn ATVMJ4'
+            echo -e
+            i		echo '    abuildn ATVMJ4 ATV_MANIFEST_BRANCH=oakeada-AFA1'
+    else
+        _abuild 1 $@
+            fi
+}
+
+function atv_clean {
+    dir=$PWD
+        goto netra && make clean && goto net_dev_mgr && make clean && goto net_con_mgr && make clean && goto escore && make clean && goto security && make clean && cd $dir
+}
+
+function build_all {
+    atv_clean
+        abuild ATVWJ4 $@ || abuildn ATVWJ4 $@
+        atv_clean
+        abuild SNAP2 $@ || abuildn SNAP2 $@
+        atv_clean
+        abuild ATVMJ4 $@ || abuildn ATVMJ4 $@
+}
+
+function app_build {
+    if ! adb root > /dev/null; then   
+        echo "Please run adb connect"	
+    else
+        APK_FILE=$(find . -name *.apk)
+            if [ "$APK_FILE" = "" ]; then 
+                echo "Could not find apk file!"
+            else
+                make DEV=true && echo "Successfully built app" && adb install $APK_FILE && echo "Successfully Installed app" && adb shell reboot
+                    fi	
+                    fi
+}
+VERSION="none"
+
+#AOSP misc
+set_version() {
+    directories=$(ls ~/ATV)
+        stringarray=($directories)
+        echo -e
+        index=1
+        for i in "${stringarray[@]}"
+            do
+                echo "$index) $i"
+                    echo -e
+                    index=$((index + 1))
+                    done
+                    read -p "Which Version? " version
+                    version=$((version - 1))
+                    VERSION=${stringarray[$version]}
+}
+
+function version_check {
+    if [ "$VERSION" = "none" ]; then
+        set_version
+            fi
+}
+
+function aroot {
+    version_check
+        cd ~/ATV/$VERSION/android-q-10
+}
+
+function aout {
+    version_check
+        cd ~/ATV/"$VERSION"/android-q-10/out/target/product
+}
+
+function dmgr {
+    version_check
+        cd ~/ATV/"$VERSION"/android-q-10/vendor/dish/apps/DeviceManager
+}
+
+function proxy {
+    version_check
+        cd ~/ATV/"$VERSION"/android-q-10/vendor/dish/apps/NtpProxy
+}
+
+function remote {
+    echo "HOME: h"
+    echo "BACK: b"
+    echo "UP: w"
+    echo "DOWN: s"
+    echo "LEFT: a"
+    echo "RIGHT: d"
+    echo "ENTER: e"
+    echo "1-9: 1-9"
+
+    echo "Press 'q' to exit"
+    count=0
+    while : ; do
+        read -n 1 k <&1
+        if [[ $k = q ]] ; then
+            printf "\nQuitting from the program\n"
+            break
+        else
+            echo -e
+            echo "pressed $k"
+            case $k in
+
+            "h")
+                _remote 3
+                ;;
+
+            "b")
+                _remote 4
+                ;;
+
+            "e")
+                _remote 23
+                ;;
+
+            "0")
+                _remote 7
+                ;;
+
+            "1")
+                _remote 8
+                ;;
+
+            "2")
+                _remote 9
+                ;;
+
+            "3")
+                _remote 10
+                ;;
+
+            "4")
+                _remote 11
+                ;;
+
+            "5")
+                _remote 12
+                ;;
+
+            "6")
+                _remote 13
+                ;;
+
+            "7")
+                _remote 14
+                ;;
+
+            "8")
+                _remote 15
+                ;;
+
+            "9")
+                _remote 16
+                ;;
+
+             "w")
+                _remote 19
+                ;;
+
+            "s")
+                _remote 20
+                ;;
+
+            "a")
+                _remote 21
+                ;;
+
+            "d")
+                _remote 22
+                ;;               
+            esac            
+        fi
+    done
+}
+
+function _remote {
+    adb shell input keyevent $1
+}
+
+function copy_all {
+    if [ "$#" -ne 1 ]; then
+        echo 'Please provide jira id'
+            echo 'e.g:'
+            echo -e
+            echo 'copy_all 3041'
+    else
+        from="~/ATV/$VERSION/android-q-10/out/target/product"
+            to="/ccshare/linux/c_files/oakeada/stories/$1"
+
+            mkdir -p "$to/mj4" && echo "created directory $to/mj4"
+            cd $from/ATVMJ4 && cp *.img "$to/mj4" && echo "successfully copied mj4 images"
+            mkdir -p "$to/wj4" && echo "created directory $to/wj4"
+            cd $from/ATVWJ4 && cp *.img "$to/wj4" && echo "successfully copied wj4 images"
+            mkdir -p "$to/snap2" && echo "created directory $to/snap"
+            cd $from/SNAP2 && cp *.img "$to/snap" && echo "successfully copied snap images"
+            fi
+}
+
+function copy_images {
+    if [ "$#" -ne 2 ]; then
+        echo 'Usage: copyImages <jira id> <board name>'
+            echo 'e.g:'
+            echo -e
+            i		echo 'copy_images 3041 snap2'
+    else	
+        dir=i"/ccshare/linux/c_files/oakeada/stories/$1/$2"
+            mkdir -p $dir && echo "successfully created directory $dir"
+            cp *.img "$dir"
+            fi
 }
 
 #STB jammers
+function jam_wj4 {
+    echo -e
+        echo "$(tput setab 1)ifconfig eth1 -auto && boot -raw -noclose -bsu -addr=0x42000000 -max=0x100000 flash0.bsu_a && android fastboot -transport=tcp -device=flash0$(tput sgr 0)"
+        echo -e
+        _fastboot 192.168.1.116 ATVWJ4 $1
+}
+
 function jam_mj4 {
-	my_fastboot 192.168.1.104
+    echo -e
+        echo "$(tput setab 1)ifconfig eth2 -auto && boot -raw -noclose -bsu -addr=0x42000000 -max=0x100000 flash0.bsu_a && android fastboot -transport=tcp -device=flash0$(tput sgr 0)"
+        echo -e
+        _fastboot 192.168.1.106 ATVMJ4 $1
 }
 
-function my_fastboot {
-		dir=$PWD
-		echo flashing from images in $dir
-		FASTBOOT_DIR=~/bin
-		IP_ADDR=$1
-
-		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR set_active a
-		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR erase misc
-		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash boot $dir/boot.img
-		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash userdata $dir/userdata.img
-		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash vbmeta $dir/vbmeta.img
-		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash super $dir/super.img
-		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR flash dtbo $dir/dtbo.ATVMJ4.img
-		$FASTBOOT_DIR/fastboot -s tcp:$IP_ADDR reboot
+function jam_snap {
+    echo -e
+        echo "$(tput setab 1)ifconfig eth0 -auto && boot -raw -noclose -bsu -addr=0x42000000 -max=0x100000 flash0.bsu_a && android fastboot -transport=tcp -device=flash0$(tput sgr 0)"
+        echo -e
+        _fastboot 192.168.1.114 SNAP2 $1
 }
 
+function _fastboot {
+    echo "paste the red line into fastboot client (bolt console)"
+        echo -e 
+        echo "flashing from images in $PWD"
+        CMD="fastboot -s tcp:$1"
+
+        $CMD erase misc
+        $CMD set_active a
+        $CMD flash boot boot.img
+        $CMD flash cache cache.img
+        $CMD flash dtbo dtbo.$2.img
+
+        if [ "$#" -eq 3 ]; then
+            $CMD flash userdata userdata.img
+                fi
+                $CMD flash vbmeta vbmeta.img
+                $CMD flash super super.img
+                $CMD reboot
+}
+
+##MISC
+function atve {	
+    if [ "$#" -ne 1 ]; then
+        echo 'Please provide tarball'
+    else
+        TARBALL=$(basename $1)
+            BASELINE=${TARBALL%%.*}
+    DIRECTORY=~/stuff/$BASELINE
+        mkdir $DIRECTORY 2>/dev/null
+        cp $1 $DIRECTORY \
+        && cd $DIRECTORY \
+        && echo "Extracting images from $TARBALL..." \
+        && tar xf $1 \
+        && l
+        fi
+}
+
+function ztail {
+    for i in $(find . -name "*.gz")
+        do
+            echo -e
+                echo "$i: "
+                zcat $i | tail -1
+                done
+}
+
+###NOTES
+##Update frameworks.jar
+#S=ATVWJ4 make framework && cp ./out/soong/.intermediates/frameworks/base/framework/android_common/jarjar/framework.jar <destination>

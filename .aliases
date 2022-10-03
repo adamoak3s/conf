@@ -15,21 +15,32 @@ alias catrc="cat ~/.conf/.aliases"
 alias vimlc="vim $LOCAL_ALIASES"
 
 ##SHORTENERS
-alias ll="ls -al"
-alias l="ls -l"
-alias lh="ls -a"
+function my_ls {
+	lsd "$@" || ls "$@" 
+}
+
+alias l="my_ls -l"
+alias lh="my_ls -a"
+
+alias ll="l -a"
+alias ltr="l -tr"
+alias ld="l -d"
 alias lll="readlink -f"
+alias lgz="l | grep gz"
 
 alias c="clear"
 alias x="exit"
+alias xargs='xargs '
+
+function ip {
+	/bin/ip -c $@
+}
 
 alias gateway="ip route | grep default"
 alias sshupdate="echo \"\" > /home/$USER/.ssh/known_hosts"
 alias addtopath="PATH=$PATH:$(pwd)"
-#alias qfind="find . -iname"
 alias utar="tar -xzvf"
 alias mkdir="/bin/mkdir"
-
 
 ##ERRONEOUS INPUT HANDLERS
 #case
@@ -66,9 +77,46 @@ alias munt="mount"
 alias moun="mount"
 
 ##FUNCTIONS
+function ltrd {
+	lsd -ltrd *$1*
+}
+
+function fgrep {
+        if [ "$#" -ne 3 ]; then
+        	echo "arguments: <string> <filetype>"
+		echo "e.g.: fgrep intent java"
+        else
+		grep -wEnIr $1 $(find . -iname *.$2)
+        fi
+
+}
+
+function gitm {
+	git fetch && git checkout remotes/origin/master
+}
+
+function gitf {
+	git fetch && git branch -a | grep $1
+}
+
+function gitco {
+	git checkout --track $1
+}
+
+function gitl {
+	git log --oneline | head
+}
+
+function edit {
+	gedit $1 & >/dev/null
+}
+
+function catn {
+	cat -n $1 | grep $2
+}
+
 function mdate {
-	foo="Valheim-`date +%F`"
-	cp -r /home/oakeada/testy /home/oakeada/$foo
+	echo "`date +%F`"
 }
 
 function upfind {
@@ -86,13 +134,12 @@ function mkdir {
 	export NEW_DIR = "hello"
 }
 
-#gets filename from full path
 function revslash {
 	echo  $1 | tr '\\' '/'
 }
 
 function qfind {
-	find . -iname $1 2>/dev/null
+	find . -iname "$1" 2>/dev/null
 }
 
 function qgrep {
@@ -111,10 +158,6 @@ function ccc {
     clear
 }
 
-function qfindd {
-	find . -iname $1 2>/dev/null
-}
-
 function fname {
 	echo ${1##*/}
 }
@@ -129,7 +172,7 @@ function hide {
 function unhide {
 	for var in $@
 		do
-			mv $var ${var%.*}
+			cp $var.hidden $var
 		done
 }
 
@@ -193,6 +236,29 @@ function showme {
 	cat $path | head -$end | tail -$len
 }
 
+function showme_multiple {
+	CONTENT=$1
+	PARTIALLY_PARSED_CONTENT=${foo#*:}
+	LINE_NUMBER=${PARTIALLY_PARSED_CONTENT%%:*}
+	LINE_NUMBER=$LINE_NUMBER-1
+	LAST_LINE=$LINE_NUMBER+20
+	FILE_PATH=${CONTENT%%:*}
+	theLine=$(cat $path | head -$lineNum | tail -1)	
+
+	# print the 20 lines preceeding the line-of-interest
+	cat $path | head -$LINE_NUMBER | tail -20
+	# print the line-of-interest highlighted yellow
+	echo "$(tput setab 2) $theLine $(tput sgr 0)"
+	# print the 20 lines succeeding the line-of-interest
+	cat $path | head -$LAST_LINE | tail -20
+}
+function showme2 {
+    for var in $@
+        do
+            showme_multiple $var
+	done
+}
+
 ####USER NOTES - USEFUL COMMANDS
  ###COMMANDS IN SUCCESSION
   #run b iff a is sucessful
@@ -224,7 +290,7 @@ function showme {
   ##xargs
     #By default xargs reads items from standard input as separated by blanks and executes a command once for each argument.
      #echo 'one two three' | xargs mkdir
-    #will execute: 
+    #will execute: k
      #$mkdir one 
      #$mkdir two
      #$mkdir three
@@ -254,7 +320,7 @@ function showme {
   ##remove everything before & including last matching substring
    #${string##*substring}
    #e.g foo="letter" && echo ${foo##*t}
-   #will print "le"
+   #will print "er"
   ##manipulate string after a pipe
    #echo letter | (read x; echo ${x%t*})
    #will print "let"
