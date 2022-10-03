@@ -1,8 +1,9 @@
 #please try not to commit any changes to this file
 
-#add local alias file here
-LOCAL_ALIASES=.
-
-#do not modify this
-source /home/$USER/.conf/$LOCAL_ALIASES
-alias vimlrc="vim $LOCAL_ALIASES"
+#uncomment one of the below
+#export LOCAL_ALIASES=~/.conf/.aang_aliases
+#export LOCAL_ALIASES=~/.conf/.suse_aliases
+#export LOCAL_ALIASES=~/.conf/.jiraiya_aliases
+#export LOCAL_ALIASES=~/.conf/.macjaro_aliases
+#export LOCAL_ALIASES=~/.conf/.lirc_aliases
+#export LOCAL_ALIASES=~/.conf/.wsl_aliases
